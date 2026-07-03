@@ -1,0 +1,291 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum EmployeeType {
+  WORKDAY_EMPLOYEE
+  LOCAL_HIRE
+  NON_EMPLOYEE
+}
+
+enum RoleCategory {
+  DIRECT_SELLER
+  LPS_FARM_GATE_SELLER
+  OVERLAY_SELLER
+  MANAGER_ROLLUP
+  FUTURE_ROLE
+}
+
+enum RoleBehavior {
+  SPLIT
+  SPLIT_WITH_LIMIT
+  ADDITIVE
+  ROLLUP
+  CONFIGURABLE
+}
+
+enum MetricType {
+  QUANTITY
+  AMOUNT
+  BOTH
+}
+
+enum AssignmentStatus {
+  DRAFT
+  SUBMITTED
+  APPROVED
+  REJECTED
+  ACTIVE
+  EXPIRED
+}
+
+enum ValidationSeverity {
+  INFO
+  WARNING
+  ERROR
+}
+
+enum ApprovalDecision {
+  SUBMITTED
+  APPROVED
+  REJECTED
+}
+
+enum DemoUserRole {
+  SALES_COMP_ADMIN
+  SALES_MANAGER
+  SELLER
+  FINANCE
+  IT_SYSTEM_ADMIN
+}
+
+model Seller {
+  id                 String       @id @default(cuid())
+  sellerCode         String       @unique
+  workdayEmployeeId  String?      @unique
+  name               String
+  email              String       @unique
+  employeeType       EmployeeType
+  isFullTime         Boolean      @default(true)
+  managerSellerId    String?
+  active             Boolean      @default(true)
+  effectiveStartDate DateTime
+  effectiveEndDate   DateTime?
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
+
+  manager              Seller?               @relation("SellerManager", fields: [managerSellerId], references: [id])
+  reports              Seller[]              @relation("SellerManager")
+  assignments          Assignment[]
+  creditPreviewResults CreditPreviewResult[]
+
+  @@index([managerSellerId])
+  @@index([active])
+}
+
+model Role {
+  id                  String       @id @default(cuid())
+  name                String       @unique
+  category            RoleCategory
+  behavior            RoleBehavior
+  splitRequiredTotal  Decimal?
+  splitMaximum        Decimal?
+  isEligibleForCredit Boolean      @default(true)
+  active              Boolean      @default(true)
+  effectiveStartDate  DateTime
+  effectiveEndDate    DateTime?
+  createdAt           DateTime     @default(now())
+  updatedAt           DateTime     @updatedAt
+
+  assignments          Assignment[]
+  creditPreviewResults CreditPreviewResult[]
+
+  @@index([category])
+  @@index([behavior])
+  @@index([active])
+}
+
+model Customer {
+  id                  String    @id @default(cuid())
+  customerCode        String    @unique
+  sapCustomerId       String?   @unique
+  salesforceAccountId String?   @unique
+  name                String
+  salesParent         String
+  active              Boolean   @default(true)
+  effectiveStartDate  DateTime
+  effectiveEndDate    DateTime?
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+
+  assignments  Assignment[]
+  mockInvoices MockInvoice[]
+
+  @@index([salesParent])
+  @@index([active])
+}
+
+model ProductGroup {
+  id                     String     @id @default(cuid())
+  productGroupCode       String     @unique
+  externalProductGroupId String?    @unique
+  name                   String
+  metricType             MetricType
+  active                 Boolean    @default(true)
+  effectiveStartDate     DateTime
+  effectiveEndDate       DateTime?
+  createdAt              DateTime   @default(now())
+  updatedAt              DateTime   @updatedAt
+
+  assignments  Assignment[]
+  mockInvoices MockInvoice[]
+
+  @@index([metricType])
+  @@index([active])
+}
+
+model Assignment {
+  id                     String           @id @default(cuid())
+  assignmentNumber       String           @unique
+  customerId             String
+  productGroupId         String
+  sellerId               String
+  roleId                 String
+  allocationPercent      Decimal
+  startDate              DateTime
+  endDate                DateTime?
+  status                 AssignmentStatus @default(DRAFT)
+  reasonNotes            String?
+  supersedesAssignmentId String?
+  createdByUserId        String?
+  updatedByUserId        String?
+  createdAt              DateTime         @default(now())
+  updatedAt              DateTime         @updatedAt
+
+  customer               Customer              @relation(fields: [customerId], references: [id])
+  productGroup           ProductGroup          @relation(fields: [productGroupId], references: [id])
+  seller                 Seller                @relation(fields: [sellerId], references: [id])
+  role                   Role                  @relation(fields: [roleId], references: [id])
+  supersedesAssignment   Assignment?           @relation("AssignmentSupersession", fields: [supersedesAssignmentId], references: [id])
+  replacementAssignments Assignment[]          @relation("AssignmentSupersession")
+  createdByUser          DemoUser?             @relation("CreatedAssignments", fields: [createdByUserId], references: [id])
+  updatedByUser          DemoUser?             @relation("UpdatedAssignments", fields: [updatedByUserId], references: [id])
+  validationResults      ValidationResult[]
+  approvalHistory        ApprovalHistory[]
+  creditPreviewResults   CreditPreviewResult[]
+
+  @@index([customerId, productGroupId, startDate, endDate])
+  @@index([sellerId, roleId])
+  @@index([status])
+  @@index([createdByUserId])
+  @@index([updatedByUserId])
+}
+
+model ValidationResult {
+  id                 String             @id @default(cuid())
+  assignmentId       String
+  validationGroupKey String
+  ruleCode           String
+  severity           ValidationSeverity
+  message            String
+  createdAt          DateTime           @default(now())
+
+  assignment Assignment @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
+
+  @@index([validationGroupKey])
+  @@index([severity])
+}
+
+model ApprovalHistory {
+  id             String           @id @default(cuid())
+  assignmentId   String
+  approverUserId String
+  decision       ApprovalDecision
+  comments       String?
+  decidedAt      DateTime         @default(now())
+
+  assignment Assignment @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
+  approver   DemoUser   @relation(fields: [approverUserId], references: [id])
+
+  @@index([assignmentId])
+  @@index([approverUserId])
+  @@index([decision])
+}
+
+model AuditLog {
+  id           String   @id @default(cuid())
+  objectType   String
+  objectId     String
+  action       String
+  actorUserId  String?
+  oldValueJson String?
+  newValueJson String?
+  comment      String?
+  createdAt    DateTime @default(now())
+
+  actor DemoUser? @relation(fields: [actorUserId], references: [id])
+
+  @@index([objectType, objectId])
+  @@index([actorUserId])
+  @@index([action])
+}
+
+model MockInvoice {
+  id             String   @id @default(cuid())
+  invoiceNumber  String   @unique
+  customerId     String
+  productGroupId String
+  quantity       Decimal
+  quantityUnit   String
+  amount         Decimal
+  invoiceDate    DateTime
+  createdAt      DateTime @default(now())
+
+  customer             Customer              @relation(fields: [customerId], references: [id])
+  productGroup         ProductGroup          @relation(fields: [productGroupId], references: [id])
+  creditPreviewResults CreditPreviewResult[]
+
+  @@index([customerId, productGroupId, invoiceDate])
+}
+
+model CreditPreviewResult {
+  id                String   @id @default(cuid())
+  mockInvoiceId     String
+  assignmentId      String
+  sellerId          String
+  roleId            String
+  allocationPercent Decimal
+  creditedQuantity  Decimal?
+  creditedAmount    Decimal?
+  createdAt         DateTime @default(now())
+
+  mockInvoice MockInvoice @relation(fields: [mockInvoiceId], references: [id], onDelete: Cascade)
+  assignment  Assignment  @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
+  seller      Seller      @relation(fields: [sellerId], references: [id])
+  role        Role        @relation(fields: [roleId], references: [id])
+
+  @@index([mockInvoiceId])
+  @@index([assignmentId])
+  @@index([sellerId])
+}
+
+model DemoUser {
+  id     String       @id @default(cuid())
+  name   String
+  email  String       @unique
+  role   DemoUserRole
+  active Boolean      @default(true)
+
+  createdAssignments Assignment[]      @relation("CreatedAssignments")
+  updatedAssignments Assignment[]      @relation("UpdatedAssignments")
+  approvals          ApprovalHistory[]
+  auditLogs          AuditLog[]
+
+  @@index([role])
+  @@index([active])
+}
