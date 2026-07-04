@@ -3,29 +3,35 @@
 @tailwind utilities;
 
 :root {
-  --background: 210 24% 98%;
-  --foreground: 222 32% 13%;
-  --border: 214 18% 84%;
-  --muted: 214 24% 93%;
-  --muted-foreground: 215 14% 42%;
-  --primary: 204 82% 31%;
+  --background: 216 38% 97%;
+  --foreground: 221 37% 15%;
+  --border: 215 36% 89%;
+  --muted: 218 40% 95%;
+  --muted-foreground: 213 17% 39%;
+  --primary: 224 100% 56%;
   --primary-foreground: 0 0% 100%;
-  --success: 151 60% 33%;
-  --warning: 37 90% 46%;
-  --danger: 354 70% 45%;
+  --success: 154 72% 31%;
+  --warning: 36 71% 42%;
+  --danger: 3 54% 49%;
+  --surface: 0 0% 100%;
+  --surface-soft: 220 33% 99%;
+  --ring: 224 100% 56%;
 }
 
 :root[data-theme="dark"] {
-  --background: 222 28% 10%;
+  --background: 222 29% 9%;
   --foreground: 210 24% 96%;
-  --border: 215 18% 28%;
-  --muted: 218 22% 18%;
+  --border: 218 20% 24%;
+  --muted: 221 24% 17%;
   --muted-foreground: 215 16% 70%;
-  --primary: 194 86% 48%;
+  --primary: 220 100% 70%;
   --primary-foreground: 222 32% 10%;
   --success: 151 58% 48%;
   --warning: 37 92% 56%;
   --danger: 354 76% 58%;
+  --surface: 222 24% 13%;
+  --surface-soft: 222 23% 16%;
+  --ring: 220 100% 70%;
 }
 
 * {
@@ -41,10 +47,14 @@ body {
   margin: 0;
   background: hsl(var(--background));
   color: hsl(var(--foreground));
+  font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  text-rendering: optimizeLegibility;
 }
 
 :root[data-theme="dark"] .bg-white {
-  background-color: hsl(222 24% 14%);
+  background-color: hsl(var(--surface));
 }
 
 :root[data-theme="dark"] .bg-emerald-50 {
@@ -77,6 +87,36 @@ a {
 }
 
 :focus-visible {
-  outline: 3px solid rgba(14, 116, 144, 0.35);
+  outline: 3px solid hsl(var(--ring) / 0.28);
   outline-offset: 2px;
+}
+
+::selection {
+  background: hsl(var(--primary) / 0.16);
+}
+
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+thead th {
+  white-space: nowrap;
+  border-bottom: 1px solid hsl(var(--border));
+  letter-spacing: 0;
+}
+
+tbody tr {
+  transition: background-color 120ms ease, color 120ms ease;
+}
+
+tbody tr:hover {
+  background-color: hsl(var(--muted) / 0.48);
+}
+
+input,
+select,
+textarea,
+button {
+  font: inherit;
 }

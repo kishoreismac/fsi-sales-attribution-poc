@@ -12,12 +12,15 @@ const config: Config = {
         "muted-foreground": "hsl(var(--muted-foreground))",
         primary: "hsl(var(--primary))",
         "primary-foreground": "hsl(var(--primary-foreground))",
+        surface: "hsl(var(--surface))",
+        "surface-soft": "hsl(var(--surface-soft))",
         success: "hsl(var(--success))",
         warning: "hsl(var(--warning))",
         danger: "hsl(var(--danger))"
       },
       boxShadow: {
-        panel: "0 1px 2px rgba(15, 23, 42, 0.06)"
+        panel: "0 1px 2px rgba(16, 24, 40, 0.06), 0 8px 24px rgba(16, 24, 40, 0.05)",
+        focus: "0 0 0 3px hsl(var(--primary) / 0.16)"
       }
     }
   },
@@ -25,4 +28,3 @@ const config: Config = {
 };
 
 export default config;
-

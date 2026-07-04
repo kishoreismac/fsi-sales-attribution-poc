@@ -40,7 +40,7 @@ export default async function DashboardPage() {
           canCreateAssignment ? (
             <Link
               href="/assignments/new"
-              className="inline-flex h-10 items-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground shadow-panel"
+              className="inline-flex h-10 items-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground shadow-sm transition hover:brightness-95"
             >
               New assignment
               <ArrowRight size={16} aria-hidden="true" />
@@ -53,13 +53,13 @@ export default async function DashboardPage() {
         {metrics.map((metric) => {
           const Icon = metric.icon;
           return (
-            <Card key={metric.label} className="p-4">
+            <Card key={metric.label} className="p-5">
               <div className="flex items-center justify-between gap-3">
                 <div>
                   <p className="text-sm text-muted-foreground">{metric.label}</p>
-                  <p className="mt-2 text-3xl font-semibold">{metric.value}</p>
+                  <p className="mt-2 text-3xl font-semibold tracking-normal">{metric.value}</p>
                 </div>
-                <div className="flex h-10 w-10 items-center justify-center rounded-md bg-muted text-primary">
+                <div className="flex h-11 w-11 items-center justify-center rounded-md border border-border bg-muted text-primary">
                   <Icon size={20} aria-hidden="true" />
                 </div>
               </div>
@@ -70,7 +70,7 @@ export default async function DashboardPage() {
 
       <section className="grid gap-4 xl:grid-cols-[1fr_380px]">
         <Card className="overflow-hidden">
-          <div className="flex items-center justify-between gap-3 border-b border-border px-4 py-3">
+          <div className="flex items-center justify-between gap-3 border-b border-border bg-surface-soft px-4 py-3">
             <h2 className="text-base font-semibold">Assignment queue</h2>
             <Link href="/assignments" className="text-sm font-semibold text-primary">
               View all
@@ -127,7 +127,7 @@ export default async function DashboardPage() {
               </div>
               <Badge>Mock data</Badge>
             </div>
-            <div className="mt-4 space-y-3 text-sm">
+            <div className="mt-4 space-y-3 text-sm leading-6">
               <p>Role configuration, assignment validation, approval history, credit preview, and exports are in scope.</p>
               <p className="text-muted-foreground">
                 Live Workday, SAP/JDE/SAC, Salesforce, Power BI, and payroll integrations remain future phases.
@@ -136,7 +136,7 @@ export default async function DashboardPage() {
           </Card>
 
           <Card className="overflow-hidden">
-            <div className="flex items-center justify-between gap-3 border-b border-border px-4 py-3">
+            <div className="flex items-center justify-between gap-3 border-b border-border bg-surface-soft px-4 py-3">
               <h2 className="text-base font-semibold">Recent audit</h2>
               <Link href="/history" className="text-sm font-semibold text-primary">
                 History
@@ -160,4 +160,3 @@ export default async function DashboardPage() {
     </div>
   );
 }
-
