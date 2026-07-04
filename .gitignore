@@ -9,3 +9,7 @@ coverage
 *.tsbuildinfo
 dev.db
 dev.db-journal
+.azure-deployment-info.txt
+fsi-azure-*.zip
+azure-app-logs*/
+azure-app-logs*.zip
