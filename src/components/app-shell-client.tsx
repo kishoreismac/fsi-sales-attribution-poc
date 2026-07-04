@@ -1,7 +1,7 @@
 "use client";
 
-import { ChevronLeft, ChevronRight, ShieldCheck } from "lucide-react";
-import { useState } from "react";
+import { ShieldCheck } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { DemoRoleSwitcher } from "@/components/demo-role-switcher";
 import { SidebarNav } from "@/components/sidebar-nav";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -18,24 +18,46 @@ export function AppShellClient({
   children: React.ReactNode;
 }) {
   const [collapsed, setCollapsed] = useState(false);
+  const collapseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  function clearCollapseTimer() {
+    if (collapseTimer.current) {
+      clearTimeout(collapseTimer.current);
+      collapseTimer.current = null;
+    }
+  }
+
+  function expandSidebar() {
+    clearCollapseTimer();
+    setCollapsed(false);
+  }
+
+  function scheduleCollapse() {
+    clearCollapseTimer();
+    collapseTimer.current = setTimeout(() => {
+      setCollapsed(true);
+    }, 1800);
+  }
+
+  useEffect(() => {
+    return clearCollapseTimer;
+  }, []);
 
   return (
     <div className={cn("min-h-screen lg:grid", collapsed ? "lg:grid-cols-[88px_1fr]" : "lg:grid-cols-[284px_1fr]")}>
-      <aside className="border-b border-border bg-surface lg:min-h-screen lg:border-b-0 lg:border-r">
+      <aside
+        className="border-b border-border bg-surface transition-[width] duration-200 lg:min-h-screen lg:border-b-0 lg:border-r"
+        onMouseEnter={expandSidebar}
+        onMouseLeave={scheduleCollapse}
+        onFocus={expandSidebar}
+        onBlur={scheduleCollapse}
+      >
         <div className={cn("flex h-16 items-center border-b border-border px-5", collapsed && "lg:justify-center lg:px-3")}>
           <div className={cn(collapsed && "lg:sr-only")}>
             <p className="text-sm font-semibold text-foreground">FSI POC</p>
             <p className="text-xs text-muted-foreground">Sales attribution foundation</p>
           </div>
-          <button
-            type="button"
-            onClick={() => setCollapsed((value) => !value)}
-            className={cn("ml-auto hidden h-9 w-9 items-center justify-center rounded-md border border-border bg-white text-muted-foreground shadow-sm transition hover:bg-muted hover:text-foreground lg:inline-flex", collapsed && "lg:ml-0")}
-            aria-label={collapsed ? "Expand menu" : "Collapse menu"}
-            title={collapsed ? "Expand menu" : "Collapse menu"}
-          >
-            {collapsed ? <ChevronRight size={18} aria-hidden="true" /> : <ChevronLeft size={18} aria-hidden="true" />}
-          </button>
+          {collapsed ? <p className="hidden text-sm font-semibold text-primary lg:block">FSI</p> : null}
         </div>
         <SidebarNav role={role} collapsed={collapsed} />
         <div className={cn(collapsed && "lg:hidden")}>
