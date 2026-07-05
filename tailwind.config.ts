@@ -19,8 +19,9 @@ const config: Config = {
         danger: "hsl(var(--danger))"
       },
       boxShadow: {
-        panel: "0 1px 2px rgba(16, 24, 40, 0.06), 0 8px 24px rgba(16, 24, 40, 0.05)",
-        focus: "0 0 0 3px hsl(var(--primary) / 0.16)"
+        panel: "0 1px 2px rgba(15, 23, 42, 0.05), 0 14px 38px rgba(15, 23, 42, 0.06)",
+        elevated: "0 18px 48px rgba(15, 23, 42, 0.12)",
+        focus: "0 0 0 3px hsl(var(--primary) / 0.18)"
       }
     }
   },

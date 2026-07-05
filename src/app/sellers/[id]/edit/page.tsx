@@ -44,7 +44,7 @@ export default async function EditSellerPage({
         title={`Edit ${seller.name}`}
         description="Update seller identity, worker classification, manager, active-date window, and Workday mapping. Historical assignments remain intact."
         actions={
-          <Link href="/sellers" className="inline-flex h-10 items-center rounded-md border border-border bg-white px-4 text-sm font-semibold">
+          <Link href="/sellers" className="inline-flex h-10 items-center rounded-md border border-border bg-surface px-4 text-sm font-semibold shadow-sm transition hover:bg-muted hover:text-primary">
             Back to sellers
           </Link>
         }

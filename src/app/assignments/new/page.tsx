@@ -39,7 +39,7 @@ export default async function NewAssignmentPage() {
         title="New assignment"
         description="Create the assignment shell for customer, product group, seller, role, allocation percentage, and effective dates. Amount and tons are not entered here; they come from invoice data in Credit Preview."
         actions={
-          <Link href="/assignments" className="inline-flex h-10 items-center rounded-md border border-border bg-white px-4 text-sm font-semibold">
+          <Link href="/assignments" className="inline-flex h-10 items-center rounded-md border border-border bg-surface px-4 text-sm font-semibold shadow-sm transition hover:bg-muted hover:text-primary">
             Previous
           </Link>
         }
@@ -108,7 +108,7 @@ export default async function NewAssignmentPage() {
           <div className="flex flex-wrap gap-2">
             <button
               formAction={saveDraftAssignment}
-              className="h-10 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground"
+              className="h-10 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground shadow-sm transition hover:-translate-y-0.5 hover:brightness-95"
             >
               Save draft
             </button>

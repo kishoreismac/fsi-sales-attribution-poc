@@ -48,7 +48,7 @@ export default async function AssignmentDetailPage({
         title={`${assignment.assignmentNumber}`}
         description="Validation status, approval trail, and effective-dated history for the selected assignment."
         actions={
-          <Link href="/assignments" className="inline-flex h-10 items-center rounded-md border border-border bg-white px-4 text-sm font-semibold">
+          <Link href="/assignments" className="inline-flex h-10 items-center rounded-md border border-border bg-surface px-4 text-sm font-semibold shadow-sm transition hover:bg-muted hover:text-primary">
             Back to workbench
           </Link>
         }
@@ -114,7 +114,7 @@ export default async function AssignmentDetailPage({
             {canCreate ? (
               <form action={revalidateAssignment}>
                 <input type="hidden" name="id" value={assignment.id} />
-                <button className="h-10 w-full rounded-md border border-border bg-white px-4 text-sm font-semibold">
+                <button className="h-10 w-full rounded-md border border-border bg-surface px-4 text-sm font-semibold shadow-sm transition hover:bg-muted hover:text-primary">
                   Revalidate assignment
                 </button>
               </form>
@@ -122,7 +122,7 @@ export default async function AssignmentDetailPage({
             {canSubmit && assignment.status === "DRAFT" ? (
               <form action={submitAssignment}>
                 <input type="hidden" name="id" value={assignment.id} />
-                <button className="h-10 w-full rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground">
+                <button className="h-10 w-full rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground shadow-sm transition hover:-translate-y-0.5 hover:brightness-95">
                   Submit for review
                 </button>
               </form>

@@ -45,7 +45,7 @@ export default async function EditMockInvoicePage({
         title={`Edit ${invoice.invoiceNumber}`}
         description="Update the invoice amount, tons/quantity, customer, product group, and invoice date used by Credit Preview."
         actions={
-          <Link href={`/credit-preview?invoiceId=${invoice.id}`} className="inline-flex h-10 items-center rounded-md border border-border bg-white px-4 text-sm font-semibold">
+          <Link href={`/credit-preview?invoiceId=${invoice.id}`} className="inline-flex h-10 items-center rounded-md border border-border bg-surface px-4 text-sm font-semibold shadow-sm transition hover:bg-muted hover:text-primary">
             Back to preview
           </Link>
         }

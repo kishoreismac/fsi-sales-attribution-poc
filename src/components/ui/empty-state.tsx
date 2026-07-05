@@ -11,9 +11,9 @@ export function EmptyState({
   action?: React.ReactNode;
 }) {
   return (
-    <Card className="flex min-h-[220px] items-center justify-center p-6 text-center">
+    <Card className="flex min-h-[240px] items-center justify-center p-8 text-center">
       <div className="max-w-md">
-        <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-md bg-muted text-primary">
+        <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-lg border border-primary/15 bg-primary/10 text-primary">
           <CircleDashed size={20} aria-hidden="true" />
         </div>
         <h2 className="mt-4 text-lg font-semibold">{title}</h2>

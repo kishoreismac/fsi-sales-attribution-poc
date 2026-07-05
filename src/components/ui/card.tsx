@@ -7,5 +7,5 @@ export function Card({
   children: React.ReactNode;
   className?: string;
 }) {
-  return <div className={cn("rounded-md border border-border bg-surface shadow-panel", className)}>{children}</div>;
+  return <div className={cn("ui-card rounded-lg border border-border/80 bg-surface shadow-panel", className)}>{children}</div>;
 }

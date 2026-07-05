@@ -41,7 +41,7 @@ export default async function EditCustomerPage({
         title={`Edit ${customer.name}`}
         description="Update customer identity, sales parent grouping, integration IDs, and effective dates."
         actions={
-          <Link href="/customers-products" className="inline-flex h-10 items-center rounded-md border border-border bg-white px-4 text-sm font-semibold">
+          <Link href="/customers-products" className="inline-flex h-10 items-center rounded-md border border-border bg-surface px-4 text-sm font-semibold shadow-sm transition hover:bg-muted hover:text-primary">
             Back to setup
           </Link>
         }

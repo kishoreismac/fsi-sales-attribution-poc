@@ -45,7 +45,7 @@ export default async function ValidatorPage() {
         description="Grouped allocation checks for direct seller splits, LPS limits, overlay behavior, inactive sellers, and date overlaps."
         actions={
           <form action={revalidateAllAssignments}>
-            <button className="inline-flex h-10 items-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground shadow-panel">
+            <button className="inline-flex h-10 items-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground shadow-sm transition hover:-translate-y-0.5 hover:brightness-95">
               <RefreshCcw size={16} aria-hidden="true" />
               Revalidate all
             </button>
@@ -109,7 +109,7 @@ export default async function ValidatorPage() {
                       <StatusBadge status={validationStatus(result.severity)} />
                       <Link
                         href={`/assignments/${result.assignmentId}`}
-                        className="rounded-md border border-border bg-white px-2 py-1 text-xs font-semibold"
+                        className="rounded-md border border-border bg-surface px-2 py-1 text-xs font-semibold"
                       >
                         View
                       </Link>

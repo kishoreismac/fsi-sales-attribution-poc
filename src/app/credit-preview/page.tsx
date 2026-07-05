@@ -72,7 +72,7 @@ export default async function CreditPreviewPage({
         <form className="grid gap-3 md:grid-cols-[1fr_auto]" action="/credit-preview">
           <label className="grid gap-2 text-sm font-medium">
             Mock invoice
-            <select name="invoiceId" defaultValue={preview.invoice?.id} className="h-10 rounded-md border border-border bg-white px-3 text-sm">
+            <select name="invoiceId" defaultValue={preview.invoice?.id} className="h-10 rounded-md border border-border bg-surface px-3 text-sm">
               {invoices.map((invoice) => (
                 <option key={invoice.id} value={invoice.id}>
                   {invoice.invoiceNumber} / {invoice.customer.name} / {invoice.productGroup.name}
@@ -80,7 +80,7 @@ export default async function CreditPreviewPage({
               ))}
             </select>
           </label>
-          <button className="h-10 self-end rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground">
+          <button className="h-10 self-end rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground shadow-sm transition hover:-translate-y-0.5 hover:brightness-95">
             Preview
           </button>
         </form>
@@ -154,7 +154,7 @@ export default async function CreditPreviewPage({
                   <th className="px-4 py-3 font-medium">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-border bg-white">
+              <tbody className="divide-y divide-border bg-surface">
                 {invoices.map((invoice) => {
                   const isSelected = invoice.id === selectedInvoiceId;
                   return (
@@ -172,17 +172,17 @@ export default async function CreditPreviewPage({
                       </td>
                       <td className="px-4 py-3">
                         <div className="flex flex-wrap gap-2">
-                          <Link href={`/credit-preview?invoiceId=${invoice.id}`} className="inline-flex h-9 items-center rounded-md border border-border bg-white px-3 text-xs font-semibold">
+                          <Link href={`/credit-preview?invoiceId=${invoice.id}`} className="inline-flex h-9 items-center rounded-md border border-border bg-surface px-3 text-xs font-semibold shadow-sm transition hover:bg-muted hover:text-primary">
                             Preview
                           </Link>
                           {canCreateInvoices ? (
                             <>
-                              <Link href={`/credit-preview/invoices/${invoice.id}/edit`} className="inline-flex h-9 items-center rounded-md border border-border bg-white px-3 text-xs font-semibold">
+                              <Link href={`/credit-preview/invoices/${invoice.id}/edit`} className="inline-flex h-9 items-center rounded-md border border-border bg-surface px-3 text-xs font-semibold shadow-sm transition hover:bg-muted hover:text-primary">
                                 Edit
                               </Link>
                               <form action={deleteMockInvoice}>
                                 <input type="hidden" name="id" value={invoice.id} />
-                                <button className="h-9 rounded-md border border-border bg-white px-3 text-xs font-semibold">
+                                <button className="h-9 rounded-md border border-border bg-surface px-3 text-xs font-semibold shadow-sm transition hover:bg-muted hover:text-primary">
                                   Delete
                                 </button>
                               </form>
@@ -252,7 +252,7 @@ export default async function CreditPreviewPage({
                   <th className="px-4 py-3 font-medium">Status</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-border bg-white">
+              <tbody className="divide-y divide-border bg-surface">
                 {preview.rows.map((row) => (
                   <tr key={row.assignment.id}>
                     <td className="px-4 py-3 font-medium">{row.assignment.assignmentNumber}</td>
