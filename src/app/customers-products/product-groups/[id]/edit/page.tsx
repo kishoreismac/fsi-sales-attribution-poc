@@ -42,7 +42,7 @@ export default async function EditProductGroupPage({
         title={`Edit ${productGroup.name}`}
         description="Update product group identity, external product mapping, metric type, and effective dates."
         actions={
-          <Link href="/customers-products" className="inline-flex h-10 items-center rounded-md border border-border bg-white px-4 text-sm font-semibold">
+          <Link href="/customers-products" className="inline-flex h-10 items-center rounded-md border border-border bg-surface px-4 text-sm font-semibold shadow-sm transition hover:bg-muted hover:text-primary">
             Back to setup
           </Link>
         }

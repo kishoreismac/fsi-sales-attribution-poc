@@ -13,7 +13,23 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+try {
+  var uiDesign = localStorage.getItem("fsi-ui-design");
+  document.documentElement.dataset.uiDesign = uiDesign === "original" ? "original" : "new";
+  var theme = localStorage.getItem("fsi-theme");
+  document.documentElement.dataset.theme = theme === "dark" ? "dark" : "light";
+} catch (error) {
+  document.documentElement.dataset.uiDesign = "new";
+}
+`
+          }}
+        />
+      </head>
       <body>
         <AppShell>{children}</AppShell>
       </body>

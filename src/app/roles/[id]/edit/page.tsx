@@ -42,7 +42,7 @@ export default async function EditRolePage({
         title={`Edit ${role.name}`}
         description="Update role category, credit eligibility, split behavior, thresholds, and effective dates."
         actions={
-          <Link href="/roles" className="inline-flex h-10 items-center rounded-md border border-border bg-white px-4 text-sm font-semibold">
+          <Link href="/roles" className="inline-flex h-10 items-center rounded-md border border-border bg-surface px-4 text-sm font-semibold shadow-sm transition hover:bg-muted hover:text-primary">
             Back to roles
           </Link>
         }

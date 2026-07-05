@@ -30,7 +30,7 @@ export default async function ExportsPage() {
         actions={
           <a
             href="/exports/approved-assignments"
-            className="inline-flex h-10 items-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground"
+            className="inline-flex h-10 items-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground shadow-sm transition hover:-translate-y-0.5 hover:brightness-95"
           >
             <Download size={16} aria-hidden="true" />
             Download CSV
@@ -65,7 +65,7 @@ export default async function ExportsPage() {
                 <th className="px-4 py-3 font-medium">Status</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-border bg-white">
+            <tbody className="divide-y divide-border bg-surface">
               {rows.map((assignment) => (
                 <tr key={assignment.id}>
                   <td className="px-4 py-3 font-medium">{assignment.assignmentNumber}</td>

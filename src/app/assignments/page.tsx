@@ -20,7 +20,7 @@ export default async function AssignmentsPage() {
           canCreate ? (
             <Link
               href="/assignments/new"
-              className="inline-flex h-10 items-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground shadow-panel"
+              className="inline-flex h-10 items-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground shadow-sm transition hover:-translate-y-0.5 hover:brightness-95"
             >
               <Plus size={16} aria-hidden="true" />
               New assignment
@@ -46,7 +46,7 @@ export default async function AssignmentsPage() {
                 <th className="px-4 py-3 font-medium">Action</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-border bg-white">
+            <tbody className="divide-y divide-border bg-surface">
               {assignments.map((assignment) => {
                 const errorCount = assignment.validationResults.filter((result) => result.severity === "ERROR").length;
                 const warningCount = assignment.validationResults.filter((result) => result.severity === "WARNING").length;
@@ -75,7 +75,7 @@ export default async function AssignmentsPage() {
                     <td className="px-4 py-3">
                       <Link
                         href={`/assignments/${assignment.id}`}
-                        className="inline-flex h-9 items-center gap-2 rounded-md border border-border bg-white px-3 text-xs font-semibold"
+                        className="inline-flex h-9 items-center gap-2 rounded-md border border-border bg-surface px-3 text-xs font-semibold shadow-sm transition hover:bg-muted hover:text-primary"
                       >
                         <Eye size={14} aria-hidden="true" />
                         View

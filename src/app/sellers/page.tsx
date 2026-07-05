@@ -56,7 +56,7 @@ export default async function SellersPage({
                   <th className="px-4 py-3 font-medium">Action</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-border bg-white">
+              <tbody className="divide-y divide-border bg-surface">
                 {sellers.map((seller) => (
                   <tr key={seller.id}>
                     <td className="px-4 py-3">
@@ -74,7 +74,7 @@ export default async function SellersPage({
                     </td>
                     <td className="px-4 py-3">
                       <ToggleButton id={seller.id} nextActive={!seller.active} action={toggleSellerActive} />
-                      <Link href={`/sellers/${seller.id}/edit`} className="mt-2 inline-flex h-9 items-center rounded-md border border-border bg-white px-3 text-xs font-semibold">
+                      <Link href={`/sellers/${seller.id}/edit`} className="mt-2 inline-flex h-9 items-center rounded-md border border-border bg-surface px-3 text-xs font-semibold shadow-sm transition hover:bg-muted hover:text-primary">
                         Edit
                       </Link>
                     </td>

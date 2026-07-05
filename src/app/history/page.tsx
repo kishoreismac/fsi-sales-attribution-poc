@@ -53,7 +53,7 @@ export default async function HistoryPage() {
                 <th className="px-4 py-3 font-medium">Status</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-border bg-white">
+            <tbody className="divide-y divide-border bg-surface">
               {events.map((event) => (
                 <tr key={event.id}>
                   <td className="px-4 py-3">{formatDate(event.createdAt)}</td>

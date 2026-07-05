@@ -57,7 +57,7 @@ export default async function CustomersProductsPage({
                   <th className="px-4 py-3 font-medium">Action</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-border bg-white">
+              <tbody className="divide-y divide-border bg-surface">
                 {customers.map((customer) => (
                   <tr key={customer.id}>
                     <td className="px-4 py-3">
@@ -76,7 +76,7 @@ export default async function CustomersProductsPage({
                     </td>
                     <td className="px-4 py-3">
                       <ToggleButton id={customer.id} nextActive={!customer.active} action={toggleCustomerActive} />
-                      <Link href={`/customers-products/customers/${customer.id}/edit`} className="mt-2 inline-flex h-9 items-center rounded-md border border-border bg-white px-3 text-xs font-semibold">
+                      <Link href={`/customers-products/customers/${customer.id}/edit`} className="mt-2 inline-flex h-9 items-center rounded-md border border-border bg-surface px-3 text-xs font-semibold shadow-sm transition hover:bg-muted hover:text-primary">
                         Edit
                       </Link>
                     </td>
@@ -139,7 +139,7 @@ export default async function CustomersProductsPage({
                   <th className="px-4 py-3 font-medium">Action</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-border bg-white">
+              <tbody className="divide-y divide-border bg-surface">
                 {productGroups.map((productGroup) => (
                   <tr key={productGroup.id}>
                     <td className="px-4 py-3">
@@ -156,7 +156,7 @@ export default async function CustomersProductsPage({
                     </td>
                     <td className="px-4 py-3">
                       <ToggleButton id={productGroup.id} nextActive={!productGroup.active} action={toggleProductGroupActive} />
-                      <Link href={`/customers-products/product-groups/${productGroup.id}/edit`} className="mt-2 inline-flex h-9 items-center rounded-md border border-border bg-white px-3 text-xs font-semibold">
+                      <Link href={`/customers-products/product-groups/${productGroup.id}/edit`} className="mt-2 inline-flex h-9 items-center rounded-md border border-border bg-surface px-3 text-xs font-semibold shadow-sm transition hover:bg-muted hover:text-primary">
                         Edit
                       </Link>
                     </td>

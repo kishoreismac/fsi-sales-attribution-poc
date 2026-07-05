@@ -8,7 +8,7 @@ export function TablePlaceholder({
   const columns = rows[0] ? Object.keys(rows[0]) : [];
 
   return (
-    <div className="overflow-hidden rounded-md border border-border bg-white shadow-panel">
+    <div className="overflow-hidden rounded-lg border border-border/80 bg-surface shadow-panel">
       <div className="overflow-x-auto">
         <table className="w-full min-w-[720px] text-left text-sm">
           <thead className="bg-muted text-muted-foreground">
@@ -24,7 +24,7 @@ export function TablePlaceholder({
             {rows.map((row, index) => (
               <tr key={index}>
                 {columns.map((column) => (
-                  <td key={column} className="px-4 py-3">
+                  <td key={column} className="px-4 py-3.5">
                     {column === "Status" ? <StatusBadge status={row[column]} /> : row[column]}
                   </td>
                 ))}
