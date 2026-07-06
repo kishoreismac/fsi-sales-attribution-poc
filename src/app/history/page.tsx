@@ -1,10 +1,12 @@
 import { AuthorizationNotice } from "@/components/authorization-notice";
 import { Card } from "@/components/ui/card";
 import { PageHeader } from "@/components/ui/page-header";
+import { SortLink } from "@/components/ui/sort-link";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { can, getDemoSession } from "@/lib/auth/session";
 import { listAuditEvents } from "@/lib/data/audit";
 import { formatDate } from "@/lib/setup-options";
+import { sortDirection, sortRows, type SortParams } from "@/lib/table-sort";
 
 function actionStatus(action: string) {
   if (action.includes("REJECT") || action.includes("BLOCKED")) {
@@ -18,8 +20,12 @@ function actionStatus(action: string) {
   return "Approved";
 }
 
-export default async function HistoryPage() {
-  const [allowed, session] = await Promise.all([can("audit:view"), getDemoSession()]);
+export default async function HistoryPage({
+  searchParams
+}: {
+  searchParams: Promise<SortParams>;
+}) {
+  const [allowed, session, params] = await Promise.all([can("audit:view"), getDemoSession(), searchParams]);
 
   if (!allowed) {
     return (
@@ -31,6 +37,24 @@ export default async function HistoryPage() {
   }
 
   const events = await listAuditEvents();
+  const direction = sortDirection(params.dir);
+  const sortedEvents = sortRows(events, direction, (event) => {
+    switch (params.sort) {
+      case "action":
+        return event.action;
+      case "object":
+        return `${event.objectType} ${event.objectId}`;
+      case "actor":
+        return event.actor?.name;
+      case "comment":
+        return event.comment;
+      case "status":
+        return actionStatus(event.action);
+      case "time":
+      default:
+        return event.createdAt;
+    }
+  });
 
   return (
     <div className="space-y-6">
@@ -45,16 +69,16 @@ export default async function HistoryPage() {
           <table className="w-full min-w-[980px] text-left text-sm">
             <thead className="bg-muted text-muted-foreground">
               <tr>
-                <th className="px-4 py-3 font-medium">Time</th>
-                <th className="px-4 py-3 font-medium">Action</th>
-                <th className="px-4 py-3 font-medium">Object</th>
-                <th className="px-4 py-3 font-medium">Actor</th>
-                <th className="px-4 py-3 font-medium">Comment</th>
-                <th className="px-4 py-3 font-medium">Status</th>
+                <th className="px-4 py-3 font-medium"><SortLink label="Time" sortKey="time" currentSort={params.sort} currentDir={direction} /></th>
+                <th className="px-4 py-3 font-medium"><SortLink label="Action" sortKey="action" currentSort={params.sort} currentDir={direction} /></th>
+                <th className="px-4 py-3 font-medium"><SortLink label="Object" sortKey="object" currentSort={params.sort} currentDir={direction} /></th>
+                <th className="px-4 py-3 font-medium"><SortLink label="Actor" sortKey="actor" currentSort={params.sort} currentDir={direction} /></th>
+                <th className="px-4 py-3 font-medium"><SortLink label="Comment" sortKey="comment" currentSort={params.sort} currentDir={direction} /></th>
+                <th className="px-4 py-3 font-medium"><SortLink label="Status" sortKey="status" currentSort={params.sort} currentDir={direction} /></th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border bg-white">
-              {events.map((event) => (
+              {sortedEvents.map((event) => (
                 <tr key={event.id}>
                   <td className="px-4 py-3">{formatDate(event.createdAt)}</td>
                   <td className="px-4 py-3 font-medium">{event.action}</td>
@@ -81,4 +105,3 @@ export default async function HistoryPage() {
     </div>
   );
 }
-

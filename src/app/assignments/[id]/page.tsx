@@ -9,6 +9,7 @@ import { can } from "@/lib/auth/session";
 import { getAssignmentById } from "@/lib/data/assignments";
 import { formatDate, formatEnum } from "@/lib/setup-options";
 import { validationRuleFix, validationRuleLabel } from "@/lib/validation/display";
+import { isValidationApplicable, validationStatusFor } from "@/lib/validation/status";
 
 function validationBadge(severity: string) {
   if (severity === "ERROR") {
@@ -17,7 +18,7 @@ function validationBadge(severity: string) {
   if (severity === "WARNING") {
     return "Warning";
   }
-  return "Approved";
+  return "Passed";
 }
 
 export default async function AssignmentDetailPage({
@@ -39,17 +40,19 @@ export default async function AssignmentDetailPage({
     notFound();
   }
 
-  const hasValidationErrors = assignment.validationResults.some((result) => result.severity === "ERROR");
+  const validationApplicable = isValidationApplicable(assignment.status);
+  const validationStatus = validationStatusFor(assignment.status, assignment.validationResults);
+  const hasValidationErrors = validationStatus === "Error";
 
   return (
     <div className="space-y-6">
       <PageHeader
-        eyebrow="Assignment detail"
+        eyebrow="Assignment Detail"
         title={`${assignment.assignmentNumber}`}
         description="Validation status, approval trail, and effective-dated history for the selected assignment."
         actions={
           <Link href="/assignments" className="inline-flex h-10 items-center rounded-md border border-border bg-white px-4 text-sm font-semibold">
-            Back to workbench
+            Back To Workbench
           </Link>
         }
       />
@@ -64,7 +67,7 @@ export default async function AssignmentDetailPage({
         <Card className="p-4">
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div>
-              <p className="text-sm text-muted-foreground">Current status</p>
+              <p className="text-sm text-muted-foreground">Current Status</p>
               <p className="mt-1 text-lg font-semibold">{formatEnum(assignment.status)}</p>
             </div>
             <StatusBadge status={formatEnum(assignment.status).replace(" ", "")} />
@@ -76,7 +79,7 @@ export default async function AssignmentDetailPage({
               <dd className="font-medium">{assignment.customer.name}</dd>
             </div>
             <div>
-              <dt className="text-muted-foreground">Product group</dt>
+              <dt className="text-muted-foreground">Product Group</dt>
               <dd className="font-medium">{assignment.productGroup.name}</dd>
             </div>
             <div>
@@ -92,7 +95,7 @@ export default async function AssignmentDetailPage({
               <dd className="font-medium">{assignment.allocationPercent.toString()}%</dd>
             </div>
             <div>
-              <dt className="text-muted-foreground">Effective dates</dt>
+              <dt className="text-muted-foreground">Effective Dates</dt>
               <dd className="font-medium">
                 {formatDate(assignment.startDate)} - {formatDate(assignment.endDate)}
               </dd>
@@ -101,7 +104,7 @@ export default async function AssignmentDetailPage({
 
           {assignment.reasonNotes ? (
             <div className="mt-5 rounded-md bg-muted p-3 text-sm">
-              <p className="font-medium">Reason / notes</p>
+              <p className="font-medium">Reason / Notes</p>
               <p className="mt-1 text-muted-foreground">{assignment.reasonNotes}</p>
             </div>
           ) : null}
@@ -115,7 +118,7 @@ export default async function AssignmentDetailPage({
               <form action={revalidateAssignment}>
                 <input type="hidden" name="id" value={assignment.id} />
                 <button className="h-10 w-full rounded-md border border-border bg-white px-4 text-sm font-semibold">
-                  Revalidate assignment
+                  Revalidate Assignment
                 </button>
               </form>
             ) : null}
@@ -123,11 +126,12 @@ export default async function AssignmentDetailPage({
               <form action={submitAssignment}>
                 <input type="hidden" name="id" value={assignment.id} />
                 <button className="h-10 w-full rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground">
-                  Submit for review
+                  Submit For Review
                 </button>
               </form>
             ) : null}
-            {hasValidationErrors ? <Badge className="border-rose-200 bg-rose-50 text-rose-800">Not ready for approval</Badge> : null}
+            {hasValidationErrors ? <Badge className="border-rose-200 bg-rose-50 text-rose-800">Not Ready For Approval</Badge> : null}
+            {!validationApplicable ? <Badge className="border-zinc-300 bg-zinc-100 text-zinc-700">Validation Not Applicable</Badge> : null}
           </div>
         </Card>
       </section>
@@ -135,10 +139,17 @@ export default async function AssignmentDetailPage({
       <section className="grid gap-4 xl:grid-cols-2">
         <Card className="overflow-hidden">
           <div className="border-b border-border px-4 py-3">
-            <h2 className="text-base font-semibold">Validation results</h2>
+            <div className="flex items-center justify-between gap-3">
+              <h2 className="text-base font-semibold">Validation Results</h2>
+              <StatusBadge status={validationStatus} />
+            </div>
           </div>
           <div className="divide-y divide-border">
-            {assignment.validationResults.length > 0 ? (
+            {!validationApplicable ? (
+              <p className="px-4 py-3 text-sm text-muted-foreground">
+                Validation is not required because this assignment is {formatEnum(assignment.status)}.
+              </p>
+            ) : assignment.validationResults.length > 0 ? (
               assignment.validationResults.map((result) => (
                 <div key={result.id} className="flex items-start justify-between gap-3 px-4 py-3 text-sm">
                   <div>
@@ -157,7 +168,7 @@ export default async function AssignmentDetailPage({
 
         <Card className="overflow-hidden">
           <div className="border-b border-border px-4 py-3">
-            <h2 className="text-base font-semibold">Approval history</h2>
+            <h2 className="text-base font-semibold">Approval History</h2>
           </div>
           <div className="divide-y divide-border">
             {assignment.approvalHistory.length > 0 ? (

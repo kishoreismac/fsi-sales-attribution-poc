@@ -1,9 +1,10 @@
 import { PrismaClient } from "@prisma/client";
+import { getPaymentProcessingData } from "@/lib/data/payments";
 
 const prisma = new PrismaClient();
 
 async function main() {
-  const [sellers, editableSeller, roles, creditEligibleRoles, visibilityOnlyRoles, customers, productGroups, submitted, approvedOrActive, validationErrors, mockInvoices, invoiceWithTons] = await Promise.all([
+  const [sellers, editableSeller, roles, creditEligibleRoles, visibilityOnlyRoles, customers, productGroups, submitted, approvedOrActive, validationErrors, mockInvoices, invoiceWithTons, paymentRun] = await Promise.all([
     prisma.seller.count(),
     prisma.seller.findFirst({ where: { active: true, email: { not: "" } } }),
     prisma.role.count(),
@@ -13,9 +14,19 @@ async function main() {
     prisma.productGroup.count(),
     prisma.assignment.count({ where: { status: "SUBMITTED" } }),
     prisma.assignment.count({ where: { status: { in: ["APPROVED", "ACTIVE"] } } }),
-    prisma.validationResult.count({ where: { severity: "ERROR" } }),
+    prisma.validationResult.count({
+      where: {
+        severity: "ERROR",
+        assignment: {
+          status: {
+            notIn: ["REJECTED", "EXPIRED"]
+          }
+        }
+      }
+    }),
     prisma.mockInvoice.count(),
-    prisma.mockInvoice.findFirst({ where: { quantityUnit: "tons", amount: { gt: 0 }, quantity: { gt: 0 } } })
+    prisma.mockInvoice.findFirst({ where: { quantityUnit: "tons", amount: { gt: 0 }, quantity: { gt: 0 } } }),
+    getPaymentProcessingData("2026-07")
   ]);
 
   const matchingInvoice = await prisma.mockInvoice.findFirst({
@@ -51,6 +62,7 @@ async function main() {
   if (mockInvoices < 1) failures.push(`Expected at least 1 mock invoice, found ${mockInvoices}.`);
   if (!invoiceWithTons) failures.push("Expected at least 1 mock invoice with tons, quantity, and amount.");
   if (previewCoverage < 1) failures.push("Expected at least 1 mock invoice to have approved/active credit-eligible assignment coverage.");
+  if (paymentRun.sellerCount < 1 || paymentRun.interimPaymentAmount <= 0) failures.push("Expected payment processing to generate positive monthly interim payment values.");
 
   if (failures.length > 0) {
     throw new Error(failures.join("\n"));
@@ -68,7 +80,9 @@ async function main() {
       approvedOrActive,
       validationErrors,
       mockInvoices,
-      previewCoverage
+      previewCoverage,
+      paymentSellers: paymentRun.sellerCount,
+      interimPaymentAmount: paymentRun.interimPaymentAmount
     })
   );
 }

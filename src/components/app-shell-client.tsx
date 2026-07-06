@@ -1,6 +1,6 @@
 "use client";
 
-import { ShieldCheck } from "lucide-react";
+import { Pin, PinOff, ShieldCheck } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { DemoRoleSwitcher } from "@/components/demo-role-switcher";
 import { SidebarNav } from "@/components/sidebar-nav";
@@ -18,6 +18,7 @@ export function AppShellClient({
   children: React.ReactNode;
 }) {
   const [collapsed, setCollapsed] = useState(false);
+  const [pinned, setPinned] = useState(true);
   const collapseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   function clearCollapseTimer() {
@@ -33,6 +34,10 @@ export function AppShellClient({
   }
 
   function scheduleCollapse() {
+    if (pinned) {
+      return;
+    }
+
     clearCollapseTimer();
     collapseTimer.current = setTimeout(() => {
       setCollapsed(true);
@@ -40,8 +45,32 @@ export function AppShellClient({
   }
 
   useEffect(() => {
+    const savedPinned = window.localStorage.getItem("fsi-sidebar-pinned");
+    if (savedPinned === "false") {
+      setPinned(false);
+      setCollapsed(true);
+    }
+
     return clearCollapseTimer;
   }, []);
+
+  function togglePinned() {
+    const nextPinned = !pinned;
+    setPinned(nextPinned);
+    window.localStorage.setItem("fsi-sidebar-pinned", String(nextPinned));
+
+    if (nextPinned) {
+      clearCollapseTimer();
+      setCollapsed(false);
+    } else {
+      clearCollapseTimer();
+      collapseTimer.current = setTimeout(() => {
+        setCollapsed(true);
+      }, 1800);
+    }
+  }
+
+  const PinIcon = pinned ? PinOff : Pin;
 
   return (
     <div className={cn("min-h-screen lg:grid", collapsed ? "lg:grid-cols-[88px_1fr]" : "lg:grid-cols-[284px_1fr]")}>
@@ -52,12 +81,24 @@ export function AppShellClient({
         onFocus={expandSidebar}
         onBlur={scheduleCollapse}
       >
-        <div className={cn("flex h-16 items-center border-b border-border px-5", collapsed && "lg:justify-center lg:px-3")}>
+        <div className={cn("flex h-16 items-center justify-between gap-3 border-b border-border px-5", collapsed && "lg:justify-center lg:px-3")}>
           <div className={cn(collapsed && "lg:sr-only")}>
             <p className="text-sm font-semibold text-foreground">FSI POC</p>
             <p className="text-xs text-muted-foreground">Sales attribution foundation</p>
           </div>
           {collapsed ? <p className="hidden text-sm font-semibold text-primary lg:block">FSI</p> : null}
+          <button
+            type="button"
+            onClick={togglePinned}
+            className={cn(
+              "hidden h-9 w-9 items-center justify-center rounded-md border border-border bg-white text-muted-foreground shadow-sm transition hover:bg-muted hover:text-foreground lg:inline-flex",
+              collapsed && "lg:hidden"
+            )}
+            aria-label={pinned ? "Unpin sidebar" : "Pin sidebar open"}
+            title={pinned ? "Unpin Sidebar" : "Pin Sidebar"}
+          >
+            <PinIcon size={16} aria-hidden="true" />
+          </button>
         </div>
         <SidebarNav role={role} collapsed={collapsed} />
         <div className={cn(collapsed && "lg:hidden")}>
@@ -71,7 +112,7 @@ export function AppShellClient({
               <ShieldCheck size={18} aria-hidden="true" />
             </div>
             <div>
-            <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Current role</p>
+            <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Current Role</p>
             <p className="text-sm font-semibold">{label}</p>
             </div>
           </div>

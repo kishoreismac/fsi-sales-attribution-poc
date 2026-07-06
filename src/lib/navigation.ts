@@ -6,6 +6,7 @@ import {
   GitPullRequestArrow,
   History,
   LayoutDashboard,
+  ReceiptText,
   ShieldCheck,
   Split,
   Users
@@ -30,6 +31,7 @@ export const navigationItems: NavigationItem[] = [
   { href: "/validator", label: "Split Validator", icon: Split, permission: "validator:view" },
   { href: "/approvals", label: "Approvals", icon: ClipboardCheck, permission: "assignments:approve" },
   { href: "/credit-preview", label: "Credit Preview", icon: BarChart3, permission: "creditPreview:view" },
+  { href: "/payments", label: "Payments", icon: ReceiptText, permission: "payments:process" },
   { href: "/history", label: "History", icon: History, permission: "audit:view" },
   { href: "/exports", label: "Exports", icon: FileDown, permission: "exports:approvedAssignments" }
 ];

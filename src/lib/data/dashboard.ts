@@ -14,7 +14,12 @@ export async function getDashboardData() {
     }),
     prisma.validationResult.count({
       where: {
-        severity: "ERROR"
+        severity: "ERROR",
+        assignment: {
+          status: {
+            notIn: ["REJECTED", "EXPIRED"]
+          }
+        }
       }
     }),
     prisma.auditLog.count(),
@@ -23,6 +28,9 @@ export async function getDashboardData() {
         OR: [
           { status: "SUBMITTED" },
           {
+            status: {
+              notIn: ["REJECTED", "EXPIRED"]
+            },
             validationResults: {
               some: {
                 severity: "ERROR"
@@ -65,4 +73,3 @@ export async function getDashboardData() {
     recentAudit
   };
 }
-

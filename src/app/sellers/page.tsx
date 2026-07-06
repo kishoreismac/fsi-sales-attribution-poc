@@ -5,15 +5,17 @@ import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Field, FormPanel, inputClassName, selectClassName, SubmitButton, SuccessMessage, ToggleButton } from "@/components/ui/setup-form";
 import { PageHeader } from "@/components/ui/page-header";
+import { SortLink } from "@/components/ui/sort-link";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { can, getDemoSession } from "@/lib/auth/session";
 import { listSellers } from "@/lib/data/sellers";
 import { employeeTypeOptions, formatDate, formatEnum } from "@/lib/setup-options";
+import { sortDirection, sortRows, type SortParams } from "@/lib/table-sort";
 
 export default async function SellersPage({
   searchParams
 }: {
-  searchParams: Promise<{ created?: string }>;
+  searchParams: Promise<{ created?: string } & SortParams>;
 }) {
   const [allowed, session] = await Promise.all([can("sellers:manage"), getDemoSession()]);
 
@@ -27,6 +29,24 @@ export default async function SellersPage({
   }
 
   const [sellers, params] = await Promise.all([listSellers(), searchParams]);
+  const direction = sortDirection(params.dir);
+  const sortedSellers = sortRows(sellers, direction, (seller) => {
+    switch (params.sort) {
+      case "code":
+        return seller.sellerCode;
+      case "employeeType":
+        return formatEnum(seller.employeeType);
+      case "manager":
+        return seller.manager?.name;
+      case "dates":
+        return seller.effectiveStartDate;
+      case "status":
+        return seller.active;
+      case "seller":
+      default:
+        return seller.name;
+    }
+  });
 
   return (
     <div className="space-y-6">
@@ -47,17 +67,17 @@ export default async function SellersPage({
             <table className="w-full min-w-[920px] text-left text-sm">
               <thead className="bg-muted text-muted-foreground">
                 <tr>
-                  <th className="px-4 py-3 font-medium">Seller</th>
-                  <th className="px-4 py-3 font-medium">Code</th>
-                  <th className="px-4 py-3 font-medium">Employee type</th>
-                  <th className="px-4 py-3 font-medium">Manager</th>
-                  <th className="px-4 py-3 font-medium">Dates</th>
-                  <th className="px-4 py-3 font-medium">Status</th>
+                  <th className="px-4 py-3 font-medium"><SortLink label="Seller" sortKey="seller" currentSort={params.sort} currentDir={direction} /></th>
+                  <th className="px-4 py-3 font-medium"><SortLink label="Code" sortKey="code" currentSort={params.sort} currentDir={direction} /></th>
+                  <th className="px-4 py-3 font-medium"><SortLink label="Employee Type" sortKey="employeeType" currentSort={params.sort} currentDir={direction} /></th>
+                  <th className="px-4 py-3 font-medium"><SortLink label="Manager" sortKey="manager" currentSort={params.sort} currentDir={direction} /></th>
+                  <th className="px-4 py-3 font-medium"><SortLink label="Dates" sortKey="dates" currentSort={params.sort} currentDir={direction} /></th>
+                  <th className="px-4 py-3 font-medium"><SortLink label="Status" sortKey="status" currentSort={params.sort} currentDir={direction} /></th>
                   <th className="px-4 py-3 font-medium">Action</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border bg-white">
-                {sellers.map((seller) => (
+                {sortedSellers.map((seller) => (
                   <tr key={seller.id}>
                     <td className="px-4 py-3">
                       <p className="font-medium">{seller.name}</p>

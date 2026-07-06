@@ -24,6 +24,14 @@ export async function validateAssignmentRules(assignmentId: string) {
     throw new Error("Assignment not found.");
   }
 
+  if (assignment.status === "EXPIRED" || assignment.status === "REJECTED") {
+    await prisma.validationResult.deleteMany({
+      where: { assignmentId }
+    });
+
+    return [];
+  }
+
   const relatedAssignments = await prisma.assignment.findMany({
     where: {
       customerId: assignment.customerId,
@@ -131,6 +139,16 @@ export async function validateAssignmentRules(assignmentId: string) {
 }
 
 export async function validateAllAssignments() {
+  await prisma.validationResult.deleteMany({
+    where: {
+      assignment: {
+        status: {
+          in: ["REJECTED", "EXPIRED"]
+        }
+      }
+    }
+  });
+
   const assignments = await prisma.assignment.findMany({
     where: {
       status: {

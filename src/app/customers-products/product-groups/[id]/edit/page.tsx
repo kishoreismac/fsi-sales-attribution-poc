@@ -22,7 +22,7 @@ export default async function EditProductGroupPage({
   if (!allowed) {
     return (
       <AuthorizationNotice
-        title="Product setup is admin-only"
+        title="Product Setup Is Admin-Only"
         description={`${session.label} cannot maintain product group setup records. This setup area is limited to Sales Compensation Admins.`}
       />
     );
@@ -43,24 +43,24 @@ export default async function EditProductGroupPage({
         description="Update product group identity, external product mapping, metric type, and effective dates."
         actions={
           <Link href="/customers-products" className="inline-flex h-10 items-center rounded-md border border-border bg-white px-4 text-sm font-semibold">
-            Back to setup
+            Back To Setup
           </Link>
         }
       />
 
-      <FormPanel title="Product group" description="Metric type controls whether Credit Preview calculates credited tons/quantity, credited amount, or both.">
+      <FormPanel title="Product Group" description="Metric type controls whether Credit Preview calculates credited tons/quantity, credited amount, or both.">
         <form action={updateProductGroup} className="grid gap-4">
           <input type="hidden" name="id" value={productGroup.id} />
-          <Field label="Product group code">
+          <Field label="Product Group Code">
             <input name="productGroupCode" required className={inputClassName} defaultValue={productGroup.productGroupCode} />
           </Field>
-          <Field label="External product group ID" description="Future key for matching this group to product master or ERP data.">
+          <Field label="External Product Group ID" description="Future key for matching this group to product master or ERP data.">
             <input name="externalProductGroupId" className={inputClassName} defaultValue={productGroup.externalProductGroupId ?? ""} />
           </Field>
-          <Field label="Product group name">
+          <Field label="Product Group Name">
             <input name="name" required className={inputClassName} defaultValue={productGroup.name} />
           </Field>
-          <Field label="Metric type" description="Quantity calculates tons/units, Amount calculates dollars, Both calculates both from invoice data.">
+          <Field label="Metric Type" description="Quantity calculates tons/units, Amount calculates dollars, Both calculates both from invoice data.">
             <select name="metricType" className={selectClassName} defaultValue={productGroup.metricType}>
               {metricTypeOptions.map((option) => (
                 <option key={option.value} value={option.value}>
@@ -70,15 +70,15 @@ export default async function EditProductGroupPage({
             </select>
           </Field>
           <div className="grid gap-4 sm:grid-cols-2">
-            <Field label="Start date">
+            <Field label="Start Date">
               <input name="effectiveStartDate" required type="date" className={inputClassName} defaultValue={dateInputValue(productGroup.effectiveStartDate)} />
             </Field>
-            <Field label="End date">
+            <Field label="End Date">
               <input name="effectiveEndDate" type="date" className={inputClassName} defaultValue={dateInputValue(productGroup.effectiveEndDate)} />
             </Field>
           </div>
           <div className="flex justify-end">
-            <SubmitButton>Save product group</SubmitButton>
+            <SubmitButton>Save Product Group</SubmitButton>
           </div>
         </form>
       </FormPanel>

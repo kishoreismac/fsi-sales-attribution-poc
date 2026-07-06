@@ -445,7 +445,7 @@ async function main() {
     }
   });
 
-  const expired = await prisma.assignment.create({
+  await prisma.assignment.create({
     data: {
       assignmentNumber: "A-1006",
       customerId: cedarHollow.id,
@@ -471,7 +471,7 @@ async function main() {
       roleId: overlayRole.id,
       allocationPercent: 25,
       startDate: date("2026-01-01"),
-      status: "APPROVED",
+      status: "ACTIVE",
       reasonNotes: "Overlay support for strategic account growth.",
       createdByUserId: admin.id,
       updatedByUserId: managerUser.id
@@ -487,8 +487,24 @@ async function main() {
       roleId: managerRole.id,
       allocationPercent: 0,
       startDate: date("2026-01-01"),
-      status: "APPROVED",
+      status: "ACTIVE",
       reasonNotes: "Manager roll-up visibility for team assignment.",
+      createdByUserId: admin.id,
+      updatedByUserId: managerUser.id
+    }
+  });
+
+  await prisma.assignment.create({
+    data: {
+      assignmentNumber: "A-1009",
+      customerId: northRidge.id,
+      productGroupId: rangeLand.id,
+      sellerId: andrew.id,
+      roleId: overlayRole.id,
+      allocationPercent: 15,
+      startDate: date("2026-10-01"),
+      status: "APPROVED",
+      reasonNotes: "Future-dated overlay support approved for next quarter.",
       createdByUserId: admin.id,
       updatedByUserId: managerUser.id
     }
@@ -496,7 +512,7 @@ async function main() {
 
   const directShortfall = await prisma.assignment.create({
     data: {
-      assignmentNumber: "A-1009",
+      assignmentNumber: "A-1010",
       customerId: prairieView.id,
       productGroupId: ampliCalf.id,
       sellerId: jennifer.id,
@@ -527,13 +543,6 @@ async function main() {
         message: "Direct seller split is 100%."
       },
       {
-        assignmentId: rejected.id,
-        validationGroupKey: "CUST-1005|PG-PURINA-WIND-RAIN|2026-06-01",
-        ruleCode: "LPS_SPLIT_MAX",
-        severity: "ERROR",
-        message: "LPS allocation is 120%. Reduce to 100% or less."
-      },
-      {
         assignmentId: overlay.id,
         validationGroupKey: "CUST-1003|PG-PURINA-RANGELAND-PRO|2026-01-01",
         ruleCode: "OVERLAY_ADDITIVE",
@@ -546,13 +555,6 @@ async function main() {
         ruleCode: "DIRECT_SPLIT_TOTAL",
         severity: "ERROR",
         message: "Direct seller split is 80%. Adjust to 100% before approval."
-      },
-      {
-        assignmentId: expired.id,
-        validationGroupKey: "CUST-1006|PG-AMS-PASTEURIZED-BALANCER|2026-03-31",
-        ruleCode: "INACTIVE_SELLER",
-        severity: "WARNING",
-        message: "Seller is inactive for future assignment dates."
       }
     ]
   });

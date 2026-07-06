@@ -11,6 +11,7 @@ export type Permission =
   | "assignments:approve"
   | "validator:view"
   | "creditPreview:view"
+  | "payments:process"
   | "audit:view"
   | "exports:approvedAssignments";
 
@@ -41,6 +42,7 @@ const permissionsByRole: Record<DemoRole, Permission[]> = {
     "assignments:view",
     "validator:view",
     "creditPreview:view",
+    "payments:process",
     "audit:view",
     "exports:approvedAssignments"
   ],
@@ -50,10 +52,11 @@ const permissionsByRole: Record<DemoRole, Permission[]> = {
     "assignments:approve",
     "validator:view",
     "creditPreview:view",
+    "payments:process",
     "audit:view"
   ],
   SELLER: ["dashboard:view", "assignments:view"],
-  FINANCE: ["dashboard:view", "assignments:view", "creditPreview:view", "audit:view"],
+  FINANCE: ["dashboard:view", "assignments:view", "creditPreview:view", "payments:process", "audit:view"],
   IT_SYSTEM_ADMIN: ["dashboard:view", "validator:view", "audit:view"]
 };
 
@@ -68,4 +71,3 @@ export function getPermissionsForRole(role: DemoRole) {
 export function isDemoRole(value: string | undefined): value is DemoRole {
   return Boolean(value && value in demoRoleLabels);
 }
-

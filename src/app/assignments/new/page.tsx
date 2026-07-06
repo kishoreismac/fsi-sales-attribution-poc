@@ -36,7 +36,7 @@ export default async function NewAssignmentPage() {
     <div className="space-y-6">
       <PageHeader
         eyebrow="Assignments"
-        title="New assignment"
+        title="New Assignment"
         description="Create the assignment shell for customer, product group, seller, role, allocation percentage, and effective dates. Amount and tons are not entered here; they come from invoice data in Credit Preview."
         actions={
           <Link href="/assignments" className="inline-flex h-10 items-center rounded-md border border-border bg-white px-4 text-sm font-semibold">
@@ -45,13 +45,13 @@ export default async function NewAssignmentPage() {
         }
       />
       <Card className="p-4">
-        <p className="text-sm font-semibold">Where do amount and tons come from?</p>
+        <p className="text-sm font-semibold">Where Do Amount And Tons Come From?</p>
         <p className="mt-1 text-sm leading-6 text-muted-foreground">
           This page only defines who gets what allocation percentage. Invoice amount and invoice quantity, such as tons, are mock invoice inputs used on Credit Preview. The preview multiplies those invoice values by this allocation percentage.
         </p>
       </Card>
       <FormPanel
-        title="Assignment details"
+        title="Assignment Details"
         description="Server-side validation will check split behavior, inactive sellers, date order, and overlapping approved records."
       >
         <form action={submitNewAssignment} className="grid gap-4">
@@ -84,7 +84,10 @@ export default async function NewAssignmentPage() {
               </select>
             </Field>
             <Field label="Role">
-              <select name="roleId" required className={selectClassName}>
+              <select name="roleId" required className={selectClassName} defaultValue="">
+                <option value="" disabled>
+                  Select Role
+                </option>
                 {activeRoles.map((role) => (
                   <option key={role.id} value={role.id}>
                     {role.name}
@@ -110,9 +113,9 @@ export default async function NewAssignmentPage() {
               formAction={saveDraftAssignment}
               className="h-10 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground"
             >
-              Save draft
+              Save Draft
             </button>
-            <SubmitButton>Submit for review</SubmitButton>
+            <SubmitButton>Submit For Review</SubmitButton>
           </div>
         </form>
       </FormPanel>

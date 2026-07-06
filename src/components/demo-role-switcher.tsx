@@ -7,9 +7,10 @@ export function DemoRoleSwitcher({ currentRole }: { currentRole: DemoRole }) {
   return (
     <form action={setDemoRole} className="grid gap-2 border-t border-border bg-surface-soft px-5 py-4">
       <label htmlFor="demo-role" className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-        Demo role
+        Demo Role
       </label>
       <select
+        key={currentRole}
         id="demo-role"
         name="role"
         defaultValue={currentRole}
@@ -22,7 +23,7 @@ export function DemoRoleSwitcher({ currentRole }: { currentRole: DemoRole }) {
         ))}
       </select>
       <button className="h-9 rounded-md bg-primary px-3 text-sm font-semibold text-primary-foreground shadow-sm transition hover:brightness-95">
-        Apply role
+        Apply Role
       </button>
       <p className="text-xs leading-5 text-muted-foreground">{demoRoleDescriptions[currentRole]}</p>
     </form>

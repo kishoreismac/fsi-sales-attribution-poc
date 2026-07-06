@@ -7,6 +7,7 @@ import { StatusBadge } from "@/components/ui/status-badge";
 import { can, getDemoSession } from "@/lib/auth/session";
 import { getDashboardData } from "@/lib/data/dashboard";
 import { formatDate, formatEnum } from "@/lib/setup-options";
+import { validationStatusFor } from "@/lib/validation/status";
 
 function dashboardStatus(status: string, hasErrors: boolean) {
   if (hasErrors) {
@@ -24,17 +25,17 @@ export default async function DashboardPage() {
   ]);
 
   const metrics = [
-    { label: "Active assignments", value: dashboard.metrics.activeAssignments, icon: ClipboardCheck },
-    { label: "Pending approval", value: dashboard.metrics.pendingApproval, icon: Users },
-    { label: "Validation failures", value: dashboard.metrics.validationFailures, icon: FileWarning },
-    { label: "Audit events", value: dashboard.metrics.auditEvents, icon: History }
+    { label: "Active Assignments", value: dashboard.metrics.activeAssignments, icon: ClipboardCheck },
+    { label: "Pending Approval", value: dashboard.metrics.pendingApproval, icon: Users },
+    { label: "Validation Failures", value: dashboard.metrics.validationFailures, icon: FileWarning },
+    { label: "Audit Events", value: dashboard.metrics.auditEvents, icon: History }
   ];
 
   return (
     <div className="space-y-6">
       <PageHeader
-        eyebrow="POC dashboard"
-        title="Sales attribution workbench"
+        eyebrow="POC Dashboard"
+        title="Sales Attribution Workbench"
         description={`Current demo role: ${session.label}. Live assignment status, validation health, and audit activity for the client demo.`}
         actions={
           canCreateAssignment ? (
@@ -42,7 +43,7 @@ export default async function DashboardPage() {
               href="/assignments/new"
               className="inline-flex h-10 items-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground shadow-sm transition hover:brightness-95"
             >
-              New assignment
+              New Assignment
               <ArrowRight size={16} aria-hidden="true" />
             </Link>
           ) : null
@@ -71,9 +72,9 @@ export default async function DashboardPage() {
       <section className="grid gap-4 xl:grid-cols-[1fr_380px]">
         <Card className="overflow-hidden">
           <div className="flex items-center justify-between gap-3 border-b border-border bg-surface-soft px-4 py-3">
-            <h2 className="text-base font-semibold">Assignment queue</h2>
+            <h2 className="text-base font-semibold">Assignment Queue</h2>
             <Link href="/assignments" className="text-sm font-semibold text-primary">
-              View all
+              View All
             </Link>
           </div>
           {dashboard.queue.length > 0 ? (
@@ -83,14 +84,14 @@ export default async function DashboardPage() {
                   <tr>
                     <th className="px-4 py-3 font-medium">Assignment</th>
                     <th className="px-4 py-3 font-medium">Customer</th>
-                    <th className="px-4 py-3 font-medium">Product group</th>
+                    <th className="px-4 py-3 font-medium">Product Group</th>
                     <th className="px-4 py-3 font-medium">Owner</th>
                     <th className="px-4 py-3 font-medium">Status</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border bg-white">
                   {dashboard.queue.map((item) => {
-                    const hasErrors = item.validationResults.some((result) => result.severity === "ERROR");
+                    const hasErrors = validationStatusFor(item.status, item.validationResults) === "Error";
                     return (
                       <tr key={item.id}>
                         <td className="px-4 py-3">
@@ -112,7 +113,7 @@ export default async function DashboardPage() {
             </div>
           ) : (
             <div className="p-6 text-center">
-              <h2 className="text-lg font-semibold">No queue items</h2>
+              <h2 className="text-lg font-semibold">No Queue Items</h2>
               <p className="mt-2 text-sm text-muted-foreground">Submitted assignments and validation errors will appear here.</p>
             </div>
           )}
@@ -122,10 +123,10 @@ export default async function DashboardPage() {
           <Card className="p-4">
             <div className="flex items-start justify-between gap-3">
               <div>
-                <h2 className="text-base font-semibold">Demo scope</h2>
+                <h2 className="text-base font-semibold">Demo Scope</h2>
                 <p className="mt-1 text-sm text-muted-foreground">POC-first, future-ready foundation.</p>
               </div>
-              <Badge>Mock data</Badge>
+              <Badge>Mock Data</Badge>
             </div>
             <div className="mt-4 space-y-3 text-sm leading-6">
               <p>Role configuration, assignment validation, approval history, credit preview, and exports are in scope.</p>
@@ -137,7 +138,7 @@ export default async function DashboardPage() {
 
           <Card className="overflow-hidden">
             <div className="flex items-center justify-between gap-3 border-b border-border bg-surface-soft px-4 py-3">
-              <h2 className="text-base font-semibold">Recent audit</h2>
+              <h2 className="text-base font-semibold">Recent Audit</h2>
               <Link href="/history" className="text-sm font-semibold text-primary">
                 History
               </Link>

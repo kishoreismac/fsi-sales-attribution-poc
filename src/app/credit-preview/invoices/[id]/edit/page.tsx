@@ -22,7 +22,7 @@ export default async function EditMockInvoicePage({
   if (!allowed) {
     return (
       <AuthorizationNotice
-        title="Invoice setup is admin-only"
+        title="Invoice Setup Is Admin-Only"
         description={`${session.label} can preview credit output, but mock invoice maintenance is limited to Sales Compensation Admins in this POC.`}
       />
     );
@@ -46,15 +46,15 @@ export default async function EditMockInvoicePage({
         description="Update the invoice amount, tons/quantity, customer, product group, and invoice date used by Credit Preview."
         actions={
           <Link href={`/credit-preview?invoiceId=${invoice.id}`} className="inline-flex h-10 items-center rounded-md border border-border bg-white px-4 text-sm font-semibold">
-            Back to preview
+            Back To Preview
           </Link>
         }
       />
 
-      <FormPanel title="Mock invoice" description="Assignments supply allocation percentages; this invoice supplies the quantity/unit and dollar amount being allocated.">
+      <FormPanel title="Mock Invoice" description="Assignments supply allocation percentages; this invoice supplies the quantity/unit and dollar amount being allocated.">
         <form action={updateMockInvoice} className="grid gap-4">
           <input type="hidden" name="id" value={invoice.id} />
-          <Field label="Invoice number">
+          <Field label="Invoice Number">
             <input name="invoiceNumber" required className={inputClassName} defaultValue={invoice.invoiceNumber} />
           </Field>
           <Field label="Customer">
@@ -66,7 +66,7 @@ export default async function EditMockInvoicePage({
               ))}
             </select>
           </Field>
-          <Field label="Product group">
+          <Field label="Product Group">
             <select name="productGroupId" required className={selectClassName} defaultValue={invoice.productGroupId}>
               {activeProductGroups.map((productGroup) => (
                 <option key={productGroup.id} value={productGroup.id}>
@@ -86,11 +86,11 @@ export default async function EditMockInvoicePage({
               <input name="amount" required type="number" min="0" step="0.01" className={inputClassName} defaultValue={invoice.amount.toString()} />
             </Field>
           </div>
-          <Field label="Invoice date">
+          <Field label="Invoice Date">
             <input name="invoiceDate" required type="date" className={inputClassName} defaultValue={dateInputValue(invoice.invoiceDate)} />
           </Field>
           <div className="flex justify-end">
-            <SubmitButton>Save invoice</SubmitButton>
+            <SubmitButton>Save Invoice</SubmitButton>
           </div>
         </form>
       </FormPanel>

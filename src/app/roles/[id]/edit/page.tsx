@@ -22,7 +22,7 @@ export default async function EditRolePage({
   if (!allowed) {
     return (
       <AuthorizationNotice
-        title="Role setup is admin-only"
+        title="Role Setup Is Admin-Only"
         description={`${session.label} cannot change role behavior. Role configuration is limited to Sales Compensation Admins in this POC.`}
       />
     );
@@ -43,15 +43,15 @@ export default async function EditRolePage({
         description="Update role category, credit eligibility, split behavior, thresholds, and effective dates."
         actions={
           <Link href="/roles" className="inline-flex h-10 items-center rounded-md border border-border bg-white px-4 text-sm font-semibold">
-            Back to roles
+            Back To Roles
           </Link>
         }
       />
 
-      <FormPanel title="Role configuration" description="Role name is the user-facing label. Category and behavior drive reporting and validation logic.">
+      <FormPanel title="Role Configuration" description="Role name is the user-facing label. Category and behavior drive reporting and validation logic.">
         <form action={updateRole} className="grid gap-4">
           <input type="hidden" name="id" value={role.id} />
-          <Field label="Role name" description="Specific business label shown to users.">
+          <Field label="Role Name" description="Specific business label shown to users.">
             <input name="name" required className={inputClassName} defaultValue={role.name} />
           </Field>
           <Field label="Category" description="Broad role family used for grouping, reporting, and future rule mapping.">
@@ -73,30 +73,30 @@ export default async function EditRolePage({
             </select>
           </Field>
           <div className="grid gap-4 sm:grid-cols-2">
-            <Field label="Required split total">
+            <Field label="Required Split Total">
               <input name="splitRequiredTotal" type="number" min="0" max="100" className={inputClassName} defaultValue={role.splitRequiredTotal?.toString() ?? ""} />
             </Field>
-            <Field label="Split maximum">
+            <Field label="Split Maximum">
               <input name="splitMaximum" type="number" min="0" max="100" className={inputClassName} defaultValue={role.splitMaximum?.toString() ?? ""} />
             </Field>
           </div>
           <div className="grid gap-1">
             <label className="flex items-center gap-2 text-sm font-medium">
               <input name="isEligibleForCredit" type="checkbox" defaultChecked={role.isEligibleForCredit} />
-              Eligible for credit
+              Eligible For Credit
             </label>
             <p className="text-xs leading-5 text-muted-foreground">Checked roles participate in Credit Preview. Unchecked roles are visibility-only.</p>
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
-            <Field label="Start date">
+            <Field label="Start Date">
               <input name="effectiveStartDate" required type="date" className={inputClassName} defaultValue={dateInputValue(role.effectiveStartDate)} />
             </Field>
-            <Field label="End date">
+            <Field label="End Date">
               <input name="effectiveEndDate" type="date" className={inputClassName} defaultValue={dateInputValue(role.effectiveEndDate)} />
             </Field>
           </div>
           <div className="flex justify-end">
-            <SubmitButton>Save role</SubmitButton>
+            <SubmitButton>Save Role</SubmitButton>
           </div>
         </form>
       </FormPanel>
