@@ -28,6 +28,21 @@ export const metricTypeOptions: Array<{ value: MetricType; label: string }> = [
   { value: "BOTH", label: "Both" }
 ];
 
+export const quantityUnitValues = ["tons", "lbs", "kg", "units"] as const;
+
+export type QuantityUnit = (typeof quantityUnitValues)[number];
+
+export const quantityUnitOptions: Array<{ value: QuantityUnit; label: string }> = [
+  { value: "tons", label: "Tons" },
+  { value: "lbs", label: "Pounds (lbs)" },
+  { value: "kg", label: "Kilograms (kg)" },
+  { value: "units", label: "Units" }
+];
+
+export function isQuantityUnit(value: string): value is QuantityUnit {
+  return quantityUnitValues.includes(value as QuantityUnit);
+}
+
 export function formatEnum(value: string) {
   return value
     .toLowerCase()

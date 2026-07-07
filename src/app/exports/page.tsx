@@ -1,4 +1,4 @@
-import { Download } from "lucide-react";
+import { Download, FileText } from "lucide-react";
 import { AuthorizationNotice } from "@/components/authorization-notice";
 import { Card } from "@/components/ui/card";
 import { PageHeader } from "@/components/ui/page-header";
@@ -56,29 +56,66 @@ export default async function ExportsPage({
         title="Export Center"
         description="Approved assignment datasets prepared for future Salesforce, Power BI, and calculation use."
         actions={
-          <a
-            href="/exports/approved-assignments"
-            className="inline-flex h-10 items-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground"
-          >
-            <Download size={16} aria-hidden="true" />
-            Download CSV
-          </a>
+          <>
+            <a
+              href="/exports/account-assignments"
+              className="inline-flex h-10 items-center gap-2 rounded-md border border-border bg-surface px-4 text-sm font-semibold text-foreground hover:bg-muted"
+            >
+              <FileText size={16} aria-hidden="true" />
+              Assignment Statement
+            </a>
+            <a
+              href="/exports/approved-assignments"
+              className="inline-flex h-10 items-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground"
+            >
+              <Download size={16} aria-hidden="true" />
+              Download CSV
+            </a>
+          </>
         }
       />
 
-      <Card className="p-4">
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          <div>
-            <h2 className="text-base font-semibold">Approved Assignments</h2>
-            <p className="mt-1 text-sm text-muted-foreground">
-              {rows.length} rows include customer, product group, seller, role, allocation, dates, and status.
-            </p>
+      <div className="grid gap-4 lg:grid-cols-2">
+        <Card className="p-4">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <h2 className="text-base font-semibold">Approved Assignments</h2>
+              <p className="mt-1 text-sm text-muted-foreground">
+                {rows.length} rows include customer, product group, seller, role, allocation, dates, and status.
+              </p>
+            </div>
+            <StatusBadge status={rows.length > 0 ? "Approved" : "Warning"} />
           </div>
-          <StatusBadge status={rows.length > 0 ? "Approved" : "Warning"} />
-        </div>
-      </Card>
+        </Card>
+
+        <Card className="p-4">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <h2 className="text-base font-semibold">Account Assignment Statement</h2>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Printable active credit assignment report in the client-style account statement format.
+              </p>
+            </div>
+            <a
+              href="/exports/account-assignments"
+              className="inline-flex h-9 items-center gap-2 rounded-md border border-border bg-surface px-3 text-sm font-semibold hover:bg-muted"
+            >
+              <FileText size={16} aria-hidden="true" />
+              View Statement
+            </a>
+          </div>
+        </Card>
+      </div>
 
       <Card className="overflow-hidden">
+        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border p-4">
+          <div>
+            <h2 className="text-base font-semibold">Approved Assignment Export Rows</h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Sort and review the same records used by the approved assignment CSV export.
+            </p>
+          </div>
+        </div>
         <div className="overflow-x-auto">
           <table className="w-full min-w-[1020px] text-left text-sm">
             <thead className="bg-muted text-muted-foreground">

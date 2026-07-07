@@ -6,13 +6,14 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import { requirePermission } from "@/lib/auth/session";
 import { prisma } from "@/lib/db";
+import { quantityUnitValues } from "@/lib/setup-options";
 
 const mockInvoiceSchema = z.object({
   invoiceNumber: z.string().trim().min(2),
   customerId: z.string().min(1),
   productGroupId: z.string().min(1),
   quantity: z.coerce.number().min(0),
-  quantityUnit: z.string().trim().min(1),
+  quantityUnit: z.enum(quantityUnitValues),
   amount: z.coerce.number().min(0),
   invoiceDate: z.string().min(1).transform((value) => new Date(`${value}T00:00:00.000Z`))
 });

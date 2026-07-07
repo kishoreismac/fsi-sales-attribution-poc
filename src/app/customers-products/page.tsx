@@ -66,7 +66,7 @@ export default async function CustomersProductsPage({
       <PageHeader
         eyebrow="Setup"
         title="Customer And Product Group Setup"
-        description="Maintain mock customer, sales parent, external integration IDs, and product metric rules used by assignment and credit preview workflows."
+        description="Maintain customer, sales parent, external integration IDs, and product metric rules used by assignment and credit calculation workflows."
       />
       {params.created === "customer" ? <SuccessMessage>Customer created.</SuccessMessage> : null}
       {params.created === "product-group" ? <SuccessMessage>Product Group Created.</SuccessMessage> : null}
@@ -200,7 +200,7 @@ export default async function CustomersProductsPage({
           </div>
         </Card>
 
-        <FormPanel title="Add Product Group" description="Metric type controls whether Credit Preview calculates credited tons/quantity, credited amount, or both.">
+        <FormPanel title="Add Product Group" description="Metric type controls whether Credit Calculation produces credited tons/quantity, credited amount, or both.">
           <form action={createProductGroup} className="grid gap-4">
             <Field label="Product Group Code">
               <input name="productGroupCode" required className={inputClassName} placeholder="PG-PURINA-NEW" />

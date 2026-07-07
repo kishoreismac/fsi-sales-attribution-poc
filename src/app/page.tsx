@@ -129,7 +129,7 @@ export default async function DashboardPage() {
               <Badge>Mock Data</Badge>
             </div>
             <div className="mt-4 space-y-3 text-sm leading-6">
-              <p>Role configuration, assignment validation, approval history, credit preview, and exports are in scope.</p>
+              <p>Role configuration, assignment validation, approval history, credit calculation, payments, and exports are in scope.</p>
               <p className="text-muted-foreground">
                 Live Workday, SAP/JDE/SAC, Salesforce, Power BI, and payroll integrations remain future phases.
               </p>

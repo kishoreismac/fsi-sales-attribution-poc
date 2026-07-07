@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Use this document to regenerate or extend the Feed Sales Incentive POC through an AI-assisted SDLC. The prompts are written to produce the same style of codebase currently in this repository: a Next.js, TypeScript, Tailwind, Prisma, SQLite POC for sales attribution, assignment validation, approvals, credit preview, audit history, and approved assignment export.
+Use this document to regenerate or extend the Feed Sales Incentive POC through an AI-assisted SDLC. The prompts are written to produce the same style of codebase currently in this repository: a Next.js, TypeScript, Tailwind, Prisma, SQLite POC for sales attribution, assignment validation, approvals, invoice credit calculation, monthly interim payments, audit history, approved assignment export, and printable account assignment statements.
 
 ## Source Documents
 
@@ -15,6 +15,9 @@ Before using the prompts, place these files in `docs/` and treat them as the bui
 5. `docs/05_backend_schema.md`
 6. `docs/06_implementation_plan.md`
 7. `docs/07_quality_gate_report.md`
+8. `docs/09_deployment_plan.md`
+9. `docs/10_monitoring_plan.md`
+10. `docs/11_runbook.md`
 
 ## Global Prompt Prefix
 
@@ -50,7 +53,7 @@ Before editing, read the relevant docs and existing code. Make focused changes. 
 ```text
 Create `docs/01_prd.md` for a POC called "Feed Sales Incentive POC".
 
-The product solves sales attribution assignment, approval, correction, audit, and credit preview problems for feed sales.
+The product solves sales attribution assignment, approval, correction, audit, invoice credit calculation, and interim payment review problems for feed sales.
 
 Include:
 - App name and tagline.
@@ -63,7 +66,7 @@ Include:
   - SACA-02 support split allocations.
   - SACA-03 support multiple role types.
   - SACA-04 support effective-dated assignments.
-- Additional POC features: seller setup, role configuration, customer/product setup, assignment creation/editing, split validation, approval workflow, audit trail, credit preview, export.
+- Additional POC features: seller setup, role configuration, customer/product setup, assignment creation/editing, split validation, approval workflow, audit trail, invoice credit calculation, monthly interim payments, CSV export, account assignment statement export.
 - Nice-to-have features.
 - Out-of-scope items: live Workday, SAP/JDE/SAC, Salesforce, Power BI, payroll, production compensation engine.
 - POC workflow.
@@ -86,7 +89,7 @@ Include:
 - Backend approach: Next.js server actions / server runtime grouped by domain.
 - Database: Prisma with SQLite for POC; PostgreSQL-compatible future path.
 - Authentication: POC demo role switcher; future Entra ID.
-- Hosting: local for POC; future Azure App Service, Azure Container Apps, or Vercel.
+- Hosting: local development and Azure App Service for hosted POC demos; future Azure Container Apps, Vercel, or managed PostgreSQL path as needed.
 - Approved libraries.
 - Environment variable names only: DATABASE_URL, NEXT_PUBLIC_APP_NAME, AUTH_SECRET.
 - Constraints.
@@ -111,11 +114,12 @@ Define routes and workflows for:
 - `/assignments/:id` assignment detail.
 - `/validator` split validator.
 - `/approvals` approval queue.
-- `/credit-preview` credit preview.
+- `/credit-preview` invoice credit calculation.
+- `/payments` monthly interim payments.
 - `/history` audit/history.
 - `/exports` export center.
 
-Include navigation rules, POC auth flow, admin journey, manager journey, core create/approve assignment journey, split validation journey, credit preview journey, empty states, error states, and redirects after actions.
+Include navigation rules, POC auth flow, admin journey, manager journey, core create/approve assignment journey, split validation journey, invoice credit calculation journey, payment processing journey, export statement journey, empty states, error states, and redirects after actions.
 ```
 
 ### Prompt 0.4 - Create UI/UX Design Brief
@@ -132,7 +136,7 @@ Include:
 - Layout principles.
 - Visual style.
 - Core components.
-- Screen-level UX notes for dashboard, sellers, roles, assignment workbench, validator, approvals, credit preview, history.
+- Screen-level UX notes for dashboard, sellers, roles, assignment workbench, validator, approvals, invoice credit calculation, payments, exports, history.
 - Required UX states: loading, empty, error, success.
 - Accessibility requirements.
 - Microcopy standards and product terminology.
@@ -160,7 +164,7 @@ Define the POC data model:
 
 Include fields, relationships, indexes where relevant, authorization matrix, validation rules, data governance notes, and seed data requirements.
 
-Make clear that mock invoice quantity/unit and amount are used only for Credit Preview.
+Make clear that invoice transaction quantity/unit and amount are entered in Invoice Credit Calculation, not on assignments. Assignments only store allocation percentage.
 ```
 
 ### Prompt 0.6 - Create Implementation Plan
@@ -229,9 +233,9 @@ Use the global prompt prefix.
 Build the app shell and navigation:
 - Left sidebar on desktop.
 - Compact horizontal navigation on small screens.
-- Dashboard, Assignments, Approvals, Validator, Credit Preview, Exports, History, Setup screens.
+- Dashboard, Assignments, Approvals, Validator, Credit Calculation, Payments, Exports, History, Setup screens.
 - Current demo role visible near the top.
-- Collapsible sidebar on desktop.
+- Sidebar hover-expands when collapsed and supports a pin toggle to keep it open.
 - Light/dark mode toggle.
 - Responsive layout with no overlapping text.
 
@@ -301,7 +305,7 @@ Seed:
 
 Acceptance criteria:
 - Seed command runs cleanly.
-- Credit Preview has at least one invoice that produces credited output.
+- Invoice Credit Calculation has at least one invoice transaction that produces credited output.
 - Validator has at least one error to demonstrate.
 ```
 
@@ -332,10 +336,10 @@ Keep Prisma calls out of page components where a reusable data module is clearer
 Use the global prompt prefix.
 
 Implement POC role permissions:
-- Sales Compensation Admin can manage setup, create/submit assignments, view validator, credit preview, audit, exports.
-- Sales Manager can view assignments, approve/reject, view validator, credit preview, audit.
+- Sales Compensation Admin can manage setup, create/submit assignments, view validator, credit calculation, payments, audit, exports.
+- Sales Manager can view assignments, approve/reject, view validator, credit calculation, payments, audit.
 - Seller can view dashboard and assignments only.
-- Finance can view dashboard, assignments, credit preview, audit.
+- Finance can view dashboard, assignments, credit calculation, payments, audit.
 - IT System Admin can view dashboard, validator, audit.
 
 Create:
@@ -388,7 +392,7 @@ Include:
 - Edit role route `/roles/[id]/edit`.
 - Activate/deactivate action.
 - Helper copy explaining role name vs category vs behavior.
-- Eligible for credit checkbox. Visibility-only roles should not generate Credit Preview rows.
+- Eligible for credit checkbox. Visibility-only roles should not generate Invoice Credit Calculation rows.
 - Audit log for create, update, activate, deactivate.
 
 Acceptance criteria:
@@ -414,7 +418,7 @@ Include:
 
 Acceptance criteria:
 - Admin can create and edit customers and product groups.
-- Product metric type drives Credit Preview behavior.
+- Product metric type drives Invoice Credit Calculation behavior.
 ```
 
 ## Phase 5 - Assignment Workbench
@@ -448,7 +452,7 @@ Detail page must show:
 - Approval history.
 - Actions: revalidate, submit where permitted.
 
-Add helper copy explaining that amount and tons are not entered on assignment. They come from mock invoices in Credit Preview; assignment only supplies allocation percent.
+Add helper copy explaining that amount and tons are not entered on assignment. They come from invoice transactions in Invoice Credit Calculation; assignment only supplies allocation percent.
 ```
 
 ### Prompt 5.2 - Assignment Server Actions
@@ -542,19 +546,19 @@ Approval rules:
 - Write approval history and audit log.
 ```
 
-## Phase 8 - Credit Preview And Export
+## Phase 8 - Invoice Credit Calculation, Payments, And Export
 
-### Prompt 8.1 - Credit Preview
+### Prompt 8.1 - Invoice Credit Calculation
 
 ```text
 Use the global prompt prefix.
 
-Build `/credit-preview`.
+Build `/credit-preview` as Invoice Credit Calculation.
 
 Include:
-- Mock invoice selector.
-- Admin-only Add Mock Invoice form with invoice number, customer, product group, invoice date, quantity, unit such as tons, and amount.
-- Mock invoice table with Preview, Edit, Delete actions.
+- Invoice transaction selector.
+- Admin-only Add Invoice Transaction form with invoice number, customer, product group, invoice date, quantity, unit such as tons/lbs/kg/units, and amount.
+- Invoice transaction table with Calculate, Edit, Delete actions.
 - Invoice edit route `/credit-preview/invoices/[id]/edit`.
 - Selected invoice summary.
 - Credited output table with assignment, seller, role, allocation, credited quantity, credited amount, status.
@@ -572,12 +576,35 @@ Empty state:
 - Explain no matching approved/active credit-eligible assignments for selected invoice.
 ```
 
-### Prompt 8.2 - Export Center
+### Prompt 8.2 - Monthly Interim Payments
 
 ```text
 Use the global prompt prefix.
 
-Build `/exports` and `/exports/approved-assignments/route.ts`.
+Build `/payments`.
+
+Include:
+- Payment month selector.
+- Interim rate control.
+- Metrics for eligible sellers, eligible invoices, gross credited amount, monthly interim payment, and true-up reserve.
+- Sortable seller-level payment run table.
+
+Calculation:
+- Use invoice transactions in the selected month.
+- Match approved active credit-eligible assignments by customer, product group, and invoice date.
+- Gross credited amount = invoice amount x allocation percent / 100.
+- Interim payment amount = gross credited amount x interim rate.
+- True-up reserve = gross credited amount - interim payment amount.
+
+Make clear that this POC generates payment values for review only; it does not execute payroll, bank transfers, or accounting entries.
+```
+
+### Prompt 8.3 - Export Center
+
+```text
+Use the global prompt prefix.
+
+Build `/exports`, `/exports/approved-assignments/route.ts`, and `/exports/account-assignments`.
 
 Export approved/active assignments as CSV with stable columns:
 - assignment_number.
@@ -590,6 +617,14 @@ Export approved/active assignments as CSV with stable columns:
 - status.
 
 Add CSV helper tests.
+
+Add a printable Account Assignment Statement:
+- Active credit-eligible assignments only.
+- Date-aware effective filtering as of today.
+- Group by customer/account and product group.
+- Columns for industry/product group, seller ID, sales person, brand, effective date, manager, and percent.
+- Print button using browser print.
+- Styling must use the application design tokens and dark/light theme behavior.
 ```
 
 ## Phase 9 - Dashboard, History, And Polish
@@ -607,7 +642,7 @@ Include:
 - Pending approval count.
 - Validation failure count.
 - Recent audit activity.
-- Quick links to create assignment, approvals, validator, credit preview.
+- Quick links to create assignment, approvals, validator, credit calculation, payments, and exports.
 
 The dashboard should explain product value within 30 seconds.
 ```
@@ -669,7 +704,8 @@ Smoke test should assert:
 - At least 1 submitted assignment.
 - At least 1 approved/active assignment.
 - At least 1 validation error.
-- At least 1 mock invoice with tons, quantity, and amount.
+- At least 1 invoice transaction with tons, quantity, and amount.
+- At least 1 monthly payment run with positive interim payment values.
 - At least 1 invoice has approved/active credit-eligible assignment coverage.
 ```
 
@@ -726,7 +762,9 @@ Review stakeholder questions from a document or notes. Categorize them by app ar
 - Customers & Products.
 - Assignments.
 - Split Validator.
-- Credit Preview.
+- Invoice Credit Calculation.
+- Monthly Interim Payments.
+- Account Assignment Statement.
 - Overall UI.
 
 For each question:
@@ -741,10 +779,10 @@ Expected improvements:
 - Sales Parent and external ID helper text.
 - Metric type helper text.
 - Assignment page explanation that amount and tons come from invoices.
-- Credit Preview invoice entry form.
+- Invoice Credit Calculation transaction entry form.
 - Clearer validation labels and recommended fixes.
 - Current role visibility.
-- Collapsible sidebar.
+- Hover-to-expand sidebar with pin toggle.
 - Light/dark toggle.
 
 Run lint, typecheck, tests, and smoke tests.
@@ -874,7 +912,9 @@ Include POC monitoring and production-future monitoring:
 - Seed data readiness check.
 - Validation error volume.
 - Approval queue aging.
-- Credit Preview no-match frequency.
+- Invoice Credit Calculation no-match frequency.
+- Monthly payment run volume and value.
+- Account assignment statement usage.
 - Export usage.
 - Security checks for secrets and dependency advisories.
 
@@ -907,9 +947,9 @@ Include:
 - How to run locally.
 - How to reset and seed the database.
 - How to run quality gates.
-- How to create a demo invoice and preview credit.
+- How to create an invoice transaction and calculate credit.
 - How to switch demo roles.
-- How to troubleshoot no matching Credit Preview rows.
+- How to troubleshoot no matching Invoice Credit Calculation rows.
 - How to troubleshoot validation errors.
 - How to deploy.
 - How to roll back.
@@ -928,9 +968,10 @@ Add Playwright E2E tests for the demo-critical journey:
 2. Admin creates assignment.
 3. Admin submits assignment.
 4. Manager approves or rejects assignment.
-5. Admin creates mock invoice.
-6. Credit Preview shows credited output.
-7. Export downloads approved assignments CSV.
+5. Admin creates invoice transaction.
+6. Invoice Credit Calculation shows credited output.
+7. Payments show monthly interim payment values.
+8. Export downloads approved assignments CSV and displays Account Assignment Statement.
 
 Keep tests deterministic. Use seeded data where possible.
 ```

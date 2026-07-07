@@ -5,22 +5,11 @@ import { Card } from "@/components/ui/card";
 import { SortLink } from "@/components/ui/sort-link";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { can } from "@/lib/auth/session";
+import { lifecycleStatusLabel } from "@/lib/assignments/lifecycle";
 import { listAssignments } from "@/lib/data/assignments";
 import { formatDate, formatEnum } from "@/lib/setup-options";
 import { sortDirection, sortRows, type SortParams } from "@/lib/table-sort";
 import { validationStatusFor } from "@/lib/validation/status";
-
-function lifecycleStatusLabel(status: string, isEligibleForCredit: boolean) {
-  if (status === "ACTIVE") {
-    return isEligibleForCredit ? "Active For Crediting" : "Active For Visibility";
-  }
-
-  if (status === "APPROVED") {
-    return isEligibleForCredit ? "Future Approved For Crediting" : "Future Approved For Visibility";
-  }
-
-  return formatEnum(status);
-}
 
 export default async function AssignmentsPage({
   searchParams
@@ -46,7 +35,12 @@ export default async function AssignmentsPage({
       case "validation":
         return validationStatusFor(assignment.status, assignment.validationResults);
       case "lifecycle":
-        return lifecycleStatusLabel(assignment.status, assignment.role.isEligibleForCredit);
+        return lifecycleStatusLabel({
+          status: assignment.status,
+          isEligibleForCredit: assignment.role.isEligibleForCredit,
+          startDate: assignment.startDate,
+          endDate: assignment.endDate
+        });
       case "assignment":
       default:
         return assignment.assignmentNumber;
@@ -125,7 +119,14 @@ export default async function AssignmentsPage({
                       <StatusBadge status={validationStatus} />
                     </td>
                     <td className="px-4 py-3">
-                      <StatusBadge status={lifecycleStatusLabel(assignment.status, assignment.role.isEligibleForCredit)} />
+                      <StatusBadge
+                        status={lifecycleStatusLabel({
+                          status: assignment.status,
+                          isEligibleForCredit: assignment.role.isEligibleForCredit,
+                          startDate: assignment.startDate,
+                          endDate: assignment.endDate
+                        })}
+                      />
                     </td>
                     <td className="px-4 py-3">
                       <Link

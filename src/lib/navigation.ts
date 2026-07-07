@@ -30,7 +30,7 @@ export const navigationItems: NavigationItem[] = [
   { href: "/assignments", label: "Assignments", icon: GitPullRequestArrow, permission: "assignments:view" },
   { href: "/validator", label: "Split Validator", icon: Split, permission: "validator:view" },
   { href: "/approvals", label: "Approvals", icon: ClipboardCheck, permission: "assignments:approve" },
-  { href: "/credit-preview", label: "Credit Preview", icon: BarChart3, permission: "creditPreview:view" },
+  { href: "/credit-preview", label: "Credit Calculation", icon: BarChart3, permission: "creditPreview:view" },
   { href: "/payments", label: "Payments", icon: ReceiptText, permission: "payments:process" },
   { href: "/history", label: "History", icon: History, permission: "audit:view" },
   { href: "/exports", label: "Exports", icon: FileDown, permission: "exports:approvedAssignments" }

@@ -157,9 +157,9 @@ Fields:
 - `comment`
 - `createdAt`
 
-### Mock Invoice
+### Mock Invoice / Invoice Transaction
 
-Purpose: Used only for POC credit preview.
+Purpose: Stores POC invoice transaction inputs used for invoice credit calculation. This is where quantity, unit, amount, and invoice date are entered; assignments only store allocation percentage.
 
 Fields:
 
@@ -173,9 +173,9 @@ Fields:
 - `invoiceDate`
 - `createdAt`
 
-### Credit Preview Result
+### Credit Preview Result / Credit Calculation Result
 
-Purpose: Shows sample credited output.
+Purpose: Stores or represents calculated credited output by invoice, assignment, seller, and role.
 
 Fields:
 
@@ -211,8 +211,27 @@ Fields:
 - Validation result belongs to one assignment.
 - Approval history belongs to one assignment.
 - Audit log references any object by type and ID.
-- Mock invoice belongs to one customer and one product group.
-- Credit preview result belongs to one mock invoice and one assignment.
+- Invoice transaction belongs to one customer and one product group.
+- Credit calculation result belongs to one invoice transaction and one assignment.
+
+### Payment Processing View Model
+
+Purpose: Generates monthly interim payment values for review without executing payroll or accounting entries.
+
+Derived fields:
+
+- Seller.
+- Seller code.
+- Eligible invoice count.
+- Assignment count.
+- Gross credited amount.
+- Interim payment amount.
+- True-up reserve amount.
+
+Notes:
+
+- Current POC derives payment rows from invoice transactions, credit-eligible assignments, and selected interim rate.
+- Payment execution, payroll posting, and production accounting entries remain out of scope.
 
 ## Authorization Model
 
@@ -224,9 +243,11 @@ Fields:
 | Create/edit assignments | Yes | No | No | No | No |
 | Submit assignments | Yes | No | No | No | No |
 | Approve/reject assignments | No | Yes | No | No | No |
-| View credit preview | Yes | Yes | Optional future | Optional future | No |
+| View invoice credit calculation | Yes | Yes | Optional future | Yes | No |
+| View monthly interim payments | Yes | Yes | No | Yes | No |
 | View audit log | Yes | Read limited | No | Read limited | Read limited |
 | Export approved assignments | Yes | No | No | Optional future | No |
+| View account assignment statement | Yes | No | No | Optional future | No |
 
 Server-side authorization is required for all write, approve/reject, audit, and export actions.
 
@@ -242,6 +263,16 @@ Server-side authorization is required for all write, approve/reject, audit, and 
 | Start date must be before end date | Error | End date must be after start date. |
 | Required fields must be present | Error | Complete all required assignment fields before saving. |
 
+## Lifecycle Rules
+
+| Rule | Display |
+|---|---|
+| Approved or active, credit-eligible, and effective today | Active For Crediting |
+| Approved, credit-eligible, and starts in the future | Future Approved For Crediting |
+| Approved or active, visibility-only, and effective today | Active For Visibility |
+| Approved, visibility-only, and starts in the future | Future Approved For Visibility |
+| Expired/rejected/submitted/draft | Display the workflow status |
+
 ## Data Governance
 
 | Data Type | Sensitivity | Control |
@@ -250,7 +281,7 @@ Server-side authorization is required for all write, approve/reject, audit, and 
 | Workday Employee ID | Sensitive | Mock only in POC; protect in future |
 | Assignment rules | Business confidential | Role-based access |
 | Audit logs | Confidential | Admin/limited read only |
-| Mock invoices | Demo data | Mark as mock data |
+| Invoice transactions | Demo data | Mark as POC/demo source data |
 
 ## Seed Data Requirements
 
@@ -264,5 +295,6 @@ Server-side authorization is required for all write, approve/reject, audit, and 
 - Invalid direct split example.
 - LPS over-allocation example.
 - Overlay additive example.
-- Mock invoices that produce visible credit preview results.
-
+- Invoice transactions that produce visible credit calculation results.
+- Monthly payment run data with positive interim payment values.
+- Active account assignment statement rows with realistic seller, manager, customer, and product group values.

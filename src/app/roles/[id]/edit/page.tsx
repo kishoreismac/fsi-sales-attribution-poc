@@ -85,7 +85,7 @@ export default async function EditRolePage({
               <input name="isEligibleForCredit" type="checkbox" defaultChecked={role.isEligibleForCredit} />
               Eligible For Credit
             </label>
-            <p className="text-xs leading-5 text-muted-foreground">Checked roles participate in Credit Preview. Unchecked roles are visibility-only.</p>
+            <p className="text-xs leading-5 text-muted-foreground">Checked roles participate in Credit Calculation. Unchecked roles are visibility-only.</p>
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
             <Field label="Start Date">

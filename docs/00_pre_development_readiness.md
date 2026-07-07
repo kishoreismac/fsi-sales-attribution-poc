@@ -9,7 +9,7 @@ Source PRD: `FSI_Sales_Attribution_POC_PRD_v2.docx`
 | Product idea is written in one sentence | Complete | Build a POC that manages sales attribution assignments at customer plus product group level using mock/manual/CSV data. |
 | Target user is clear | Complete | Primary users are Sales Compensation Admins and Sales Managers/Supervisors. |
 | Core problem is clear | Complete | Assignment data, approvals, corrections, and auditability are spread across tools, spreadsheets, and email. |
-| First useful version is defined | Complete | POC with seller setup, role configuration, assignment workbench, validation, approval, audit/history, credit preview, and export-ready output. |
+| First useful version is defined | Complete | POC with seller setup, role configuration, assignment workbench, validation, approval, audit/history, invoice credit calculation, monthly interim payments, export-ready CSV, and printable account assignment statements. |
 | Out-of-scope items are listed | Complete | Live Workday, SAP/JDE/SAC, Salesforce, Power BI, payroll, full compensation engine, year-end true-up, accruals, and LPS billing automation. |
 | Initial success measure is defined | Complete | Client can understand and validate the assignment foundation through the demo storyline and acceptance criteria. |
 
@@ -29,7 +29,7 @@ Source PRD: `FSI_Sales_Attribution_POC_PRD_v2.docx`
 
 Current target: Level 2, MVP-style POC.
 
-The immediate goal is not enterprise production readiness. The POC should prove the core workflow and data model while preserving a path to Pilot and Production after client approval.
+The immediate goal is demo-ready POC validation, not enterprise production readiness. The POC now proves the core workflow and data model in Azure App Service while preserving a path to Pilot and Production after client approval.
 
 ## Required Pre-Code Documents
 
@@ -43,4 +43,3 @@ The immediate goal is not enterprise production readiness. The POC should prove 
 | 06 | Implementation Plan | Created |
 
 Development should not begin until these documents are reviewed and accepted as the source of truth.
-

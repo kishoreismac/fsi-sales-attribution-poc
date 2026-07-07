@@ -37,7 +37,7 @@ export default async function NewAssignmentPage() {
       <PageHeader
         eyebrow="Assignments"
         title="New Assignment"
-        description="Create the assignment shell for customer, product group, seller, role, allocation percentage, and effective dates. Amount and tons are not entered here; they come from invoice data in Credit Preview."
+        description="Create the assignment shell for customer, product group, seller, role, allocation percentage, and effective dates. Amount and quantity are not entered here; they come from invoice transactions in Credit Calculation."
         actions={
           <Link href="/assignments" className="inline-flex h-10 items-center rounded-md border border-border bg-white px-4 text-sm font-semibold">
             Previous
@@ -47,7 +47,7 @@ export default async function NewAssignmentPage() {
       <Card className="p-4">
         <p className="text-sm font-semibold">Where Do Amount And Tons Come From?</p>
         <p className="mt-1 text-sm leading-6 text-muted-foreground">
-          This page only defines who gets what allocation percentage. Invoice amount and invoice quantity, such as tons, are mock invoice inputs used on Credit Preview. The preview multiplies those invoice values by this allocation percentage.
+          This page only defines who gets what allocation percentage. Invoice amount and invoice quantity, such as tons, come from invoice transactions used by Credit Calculation. The calculation multiplies those invoice values by this allocation percentage.
         </p>
       </Card>
       <FormPanel

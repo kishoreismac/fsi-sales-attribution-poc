@@ -27,7 +27,7 @@ export const demoRoleDescriptions: Record<DemoRole, string> = {
   SALES_COMP_ADMIN: "Creates setup records, assignments, submissions, exports, and audit review.",
   SALES_MANAGER: "Reviews submitted assignments and can approve or reject changes.",
   SELLER: "Future read-only view of assigned customers and product groups.",
-  FINANCE: "Future read-only view of approved outputs and credit preview.",
+  FINANCE: "Future read-only view of approved outputs, credit calculation, and payments.",
   IT_SYSTEM_ADMIN: "Future integration and configuration oversight."
 };
 

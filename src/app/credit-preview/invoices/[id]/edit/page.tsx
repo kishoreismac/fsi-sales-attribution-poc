@@ -7,6 +7,7 @@ import { PageHeader } from "@/components/ui/page-header";
 import { can, getDemoSession } from "@/lib/auth/session";
 import { listCustomersAndProductGroups } from "@/lib/data/customers-products";
 import { getMockInvoiceById } from "@/lib/data/credit-preview";
+import { isQuantityUnit, quantityUnitOptions } from "@/lib/setup-options";
 
 function dateInputValue(value: Date) {
   return value.toISOString().slice(0, 10);
@@ -22,8 +23,8 @@ export default async function EditMockInvoicePage({
   if (!allowed) {
     return (
       <AuthorizationNotice
-        title="Invoice Setup Is Admin-Only"
-        description={`${session.label} can preview credit output, but mock invoice maintenance is limited to Sales Compensation Admins in this POC.`}
+        title="Invoice Transaction Setup Is Admin-Only"
+        description={`${session.label} can view calculated credit output, but invoice transaction maintenance is limited to Sales Compensation Admins in this POC.`}
       />
     );
   }
@@ -37,21 +38,22 @@ export default async function EditMockInvoicePage({
 
   const activeCustomers = setupData.customers.filter((customer) => customer.active || customer.id === invoice.customerId);
   const activeProductGroups = setupData.productGroups.filter((productGroup) => productGroup.active || productGroup.id === invoice.productGroupId);
+  const hasLegacyUnit = !isQuantityUnit(invoice.quantityUnit);
 
   return (
     <div className="space-y-6">
       <PageHeader
-        eyebrow="Preview"
+        eyebrow="Credit Calculation"
         title={`Edit ${invoice.invoiceNumber}`}
-        description="Update the invoice amount, tons/quantity, customer, product group, and invoice date used by Credit Preview."
+        description="Update the invoice amount, quantity, customer, product group, and invoice date used by Credit Calculation."
         actions={
           <Link href={`/credit-preview?invoiceId=${invoice.id}`} className="inline-flex h-10 items-center rounded-md border border-border bg-white px-4 text-sm font-semibold">
-            Back To Preview
+            Back To Credit Calculation
           </Link>
         }
       />
 
-      <FormPanel title="Mock Invoice" description="Assignments supply allocation percentages; this invoice supplies the quantity/unit and dollar amount being allocated.">
+      <FormPanel title="Invoice Transaction" description="Assignments supply allocation percentages; this transaction supplies the quantity/unit and dollar amount being allocated.">
         <form action={updateMockInvoice} className="grid gap-4">
           <input type="hidden" name="id" value={invoice.id} />
           <Field label="Invoice Number">
@@ -80,7 +82,14 @@ export default async function EditMockInvoicePage({
               <input name="quantity" required type="number" min="0" step="0.01" className={inputClassName} defaultValue={invoice.quantity.toString()} />
             </Field>
             <Field label="Unit">
-              <input name="quantityUnit" required className={inputClassName} defaultValue={invoice.quantityUnit} />
+              <select name="quantityUnit" required className={selectClassName} defaultValue={invoice.quantityUnit}>
+                {hasLegacyUnit ? <option value={invoice.quantityUnit}>{invoice.quantityUnit} (Legacy)</option> : null}
+                {quantityUnitOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
             </Field>
             <Field label="Amount">
               <input name="amount" required type="number" min="0" step="0.01" className={inputClassName} defaultValue={invoice.amount.toString()} />
@@ -90,7 +99,7 @@ export default async function EditMockInvoicePage({
             <input name="invoiceDate" required type="date" className={inputClassName} defaultValue={dateInputValue(invoice.invoiceDate)} />
           </Field>
           <div className="flex justify-end">
-            <SubmitButton>Save Invoice</SubmitButton>
+            <SubmitButton>Save Transaction</SubmitButton>
           </div>
         </form>
       </FormPanel>

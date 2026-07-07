@@ -27,11 +27,11 @@ Future users:
 
 ## Core Value Proposition
 
-Give business users a simple application to create, validate, approve, history-track, and preview sales credit assignments at the customer plus product group level, using mock/manual/CSV data now and future-ready data contracts later.
+Give business users a simple application to create, validate, approve, history-track, calculate, and export sales credit assignments at the customer plus product group level, using mock/manual/CSV data now and future-ready data contracts later.
 
 ## Product Vision
 
-The product should feel simple to business users while being structured correctly behind the scenes. The assignment module is the foundation for future incentive calculations, payroll approvals, dashboards, adjustments, Salesforce visibility, accruals, and LPS billing.
+The product should feel simple to business users while being structured correctly behind the scenes. The assignment module is the foundation for incentive calculations, interim payment review, payroll approvals, dashboards, adjustments, Salesforce visibility, accruals, and LPS billing.
 
 ## Must-Have Features
 
@@ -41,6 +41,8 @@ The product should feel simple to business users while being structured correctl
 | SACA-02 | Support split allocations across multiple sellers | Multiple sellers can share the same customer plus product group, with validation based on role type. |
 | SACA-03 | Support multiple role types | Direct Seller, Overlay Seller, LPS/Farm Gate Seller, Manager Roll-up, and future configurable roles. |
 | SACA-04 | Support effective-dated assignments | Assignments have start and end dates to preserve historical accuracy. |
+| SACA-05 | Calculate invoice credit from assignments | Invoice transactions hold quantity, unit, amount, and invoice date; active approved assignments supply allocation percentages. |
+| SACA-06 | Generate monthly interim payment values | Finance, managers, and compensation admins can review monthly interim payment values so sellers receive consistent income before final true-up. |
 
 Additional POC features:
 
@@ -51,8 +53,12 @@ Additional POC features:
 - Split validation for direct, LPS, overlay, overlap, inactive seller, and date errors.
 - Simple approval workflow: draft, submitted, approved, rejected, active, expired.
 - Assignment history and audit trail.
-- Credit calculation preview using mock invoice data.
+- Invoice credit calculation using POC invoice transaction data.
+- Payment Processing screen for monthly interim payment values and true-up reserve.
+- Date-aware lifecycle labels, including Active For Crediting and Future Approved For Crediting.
 - Export-ready approved assignment dataset.
+- Printable Account Assignment Statement for active account/seller allocations.
+- Sortable tabular screens, dark mode improvements, and hover/pinned sidebar behavior.
 
 ## Nice-To-Have Features
 
@@ -72,7 +78,7 @@ Additional POC features:
 - Full production compensation engine.
 - Full year-end true-up and accrual processing.
 - LPS billing automation.
-- Real payment execution or production accounting entries.
+- Real payment execution, bank transfer, payroll posting, or production accounting entries.
 
 ## POC Workflow
 
@@ -81,8 +87,10 @@ Additional POC features:
 3. Create assignment.
 4. Validate split.
 5. Submit and approve.
-6. Preview credit.
-7. Track history.
+6. Calculate invoice credit from transaction quantity and amount.
+7. Review monthly interim payment values.
+8. Export approved assignments or print active account assignment statements.
+9. Track history.
 
 ## User Stories
 
@@ -93,8 +101,10 @@ As a Sales Compensation Admin, I want to create customer plus product group assi
 As a Sales Compensation Admin, I want the system to validate split allocation rules so that payment issues are caught before approval.
 As a Sales Manager, I want to approve or reject submitted assignments so that assignment changes are governed.
 As a Sales Compensation Admin, I want assignment history to be preserved so that historical calculations and audits remain accurate.
-As a Sales Compensation Admin, I want to preview credit from mock invoices so that the client can see how assignment data drives future calculations.
+As a Sales Compensation Admin, I want to calculate invoice credit from invoice transactions so that the client can see how assignment data drives credit outputs.
+As a Finance user, I want to generate monthly interim payment values so that sellers receive consistent income while final true-up remains separate.
 As a Sales Compensation Admin, I want approved assignments export-ready so that future Salesforce, Power BI, and calculation integrations can reuse the data.
+As a Sales Compensation Admin, I want a printable account assignment statement so that active account/seller allocation output can be reviewed in a client-familiar format.
 ```
 
 ## Success Metrics
@@ -109,6 +119,7 @@ As a Sales Compensation Admin, I want approved assignments export-ready so that 
 - Assignment history is preserved rather than overwritten.
 - Manager can approve or reject submitted assignments.
 - Audit details are recorded for create, update, submit, approve, reject, and expire actions.
-- Credit preview works with mock invoice data.
+- Invoice credit calculation works with POC invoice transaction data.
+- Monthly interim payment values are generated from calculated credited amounts.
 - Approved assignment data can be exported or exposed as a clean future-ready dataset.
-
+- Active account assignment statements can be viewed and printed from Exports.

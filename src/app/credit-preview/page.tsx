@@ -9,6 +9,7 @@ import { StatusBadge } from "@/components/ui/status-badge";
 import { can, getDemoSession } from "@/lib/auth/session";
 import { listCustomersAndProductGroups } from "@/lib/data/customers-products";
 import { getCreditPreview, listMockInvoices } from "@/lib/data/credit-preview";
+import { quantityUnitOptions } from "@/lib/setup-options";
 import { sortDirection, sortRows, type SortParams } from "@/lib/table-sort";
 
 function formatNumber(value: number | null, unit?: string) {
@@ -35,6 +36,18 @@ function formatCurrency(value: number | null) {
   }).format(value);
 }
 
+function invoiceCalculationStatus(isSelected: boolean, hasCreditedRows: boolean) {
+  if (isSelected && hasCreditedRows) {
+    return "Calculated";
+  }
+
+  if (isSelected) {
+    return "No Matching Assignment";
+  }
+
+  return "Ready For Calculation";
+}
+
 export default async function CreditPreviewPage({
   searchParams
 }: {
@@ -45,8 +58,8 @@ export default async function CreditPreviewPage({
   if (!allowed) {
     return (
       <AuthorizationNotice
-        title="Credit Preview Is Not Available For This Role"
-        description={`${session.label} cannot access credit preview in this POC role configuration.`}
+        title="Credit Calculation Is Not Available For This Role"
+        description={`${session.label} cannot access credit calculation in this role configuration.`}
       />
     );
   }
@@ -100,15 +113,15 @@ export default async function CreditPreviewPage({
   return (
     <div className="space-y-6">
       <PageHeader
-        eyebrow="Preview"
-        title="Credit Preview"
-        description="Sample invoice crediting based on approved active assignments and mock invoice data. Invoice quantity, such as tons, and invoice amount are selected here; assignments only provide allocation percentages."
+        eyebrow="Credit Calculation"
+        title="Invoice Credit Calculation"
+        description="Calculate seller credit from invoice transactions using approved assignment rules. In production, invoice transactions will come from ERP or billing feeds; this POC allows manual transaction entry for demo data."
       />
 
       <Card className="p-4">
         <form className="grid gap-3 md:grid-cols-[1fr_auto]" action="/credit-preview">
           <label className="grid gap-2 text-sm font-medium">
-            Mock Invoice
+            Invoice Transaction
             <select name="invoiceId" defaultValue={preview.invoice?.id} className="h-10 rounded-md border border-border bg-white px-3 text-sm">
               {invoices.map((invoice) => (
                 <option key={invoice.id} value={invoice.id}>
@@ -118,7 +131,7 @@ export default async function CreditPreviewPage({
             </select>
           </label>
           <button className="h-10 self-end rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground">
-            Preview
+            Calculate Credit
           </button>
         </form>
       </Card>
@@ -126,9 +139,9 @@ export default async function CreditPreviewPage({
       {canCreateInvoices ? (
         <Card className="p-4">
           <div>
-            <h2 className="text-base font-semibold">Add Mock Invoice</h2>
+            <h2 className="text-base font-semibold">Add Invoice Transaction</h2>
             <p className="mt-1 text-sm text-muted-foreground">
-              Enter the invoice amount and tons/quantity here. Assignment allocation percentages decide how these invoice values are split in the credited output.
+              Enter invoice amount and quantity for POC data entry. Approved assignment rules determine how these invoice values are allocated to sellers.
             </p>
           </div>
           <form action={createMockInvoice} className="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
@@ -160,13 +173,19 @@ export default async function CreditPreviewPage({
               <input name="quantity" required type="number" min="0" step="0.01" className={inputClassName} placeholder="100" />
             </Field>
             <Field label="Unit">
-              <input name="quantityUnit" required className={inputClassName} defaultValue="tons" />
+              <select name="quantityUnit" required className={selectClassName} defaultValue="tons">
+                {quantityUnitOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
             </Field>
             <Field label="Amount">
               <input name="amount" required type="number" min="0" step="0.01" className={inputClassName} placeholder="10000" />
             </Field>
             <div className="flex items-end">
-              <SubmitButton>Create Invoice</SubmitButton>
+              <SubmitButton>Create Transaction</SubmitButton>
             </div>
           </form>
         </Card>
@@ -174,8 +193,10 @@ export default async function CreditPreviewPage({
 
       <Card className="overflow-hidden">
         <div className="border-b border-border px-4 py-3">
-          <h2 className="text-base font-semibold">Mock Invoices</h2>
-          <p className="mt-1 text-sm text-muted-foreground">These are the source records for invoice amount and tons/quantity used by Credit Preview.</p>
+          <h2 className="text-base font-semibold">Invoice Transactions</h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Invoice transactions are the source values for credit calculation. Calculation state shows whether the selected transaction produced seller credit rows.
+          </p>
         </div>
         {invoices.length > 0 ? (
           <div className="overflow-x-auto">
@@ -187,7 +208,7 @@ export default async function CreditPreviewPage({
                   <th className="px-4 py-3 font-medium"><SortLink label="Product" sortKey="invoiceProduct" currentSort={params.sort} currentDir={direction} query={params} /></th>
                   <th className="px-4 py-3 font-medium"><SortLink label="Quantity" sortKey="invoiceQuantity" currentSort={params.sort} currentDir={direction} query={params} /></th>
                   <th className="px-4 py-3 font-medium"><SortLink label="Amount" sortKey="invoiceAmount" currentSort={params.sort} currentDir={direction} query={params} /></th>
-                  <th className="px-4 py-3 font-medium"><SortLink label="Status" sortKey="invoiceStatus" currentSort={params.sort} currentDir={direction} query={params} /></th>
+                  <th className="px-4 py-3 font-medium"><SortLink label="Calculation State" sortKey="invoiceStatus" currentSort={params.sort} currentDir={direction} query={params} /></th>
                   <th className="px-4 py-3 font-medium">Actions</th>
                 </tr>
               </thead>
@@ -205,12 +226,12 @@ export default async function CreditPreviewPage({
                       <td className="px-4 py-3">{formatNumber(Number(invoice.quantity), invoice.quantityUnit)}</td>
                       <td className="px-4 py-3">{formatCurrency(Number(invoice.amount))}</td>
                       <td className="px-4 py-3">
-                        <StatusBadge status={isSelected && preview.rows.length > 0 ? "Approved" : isSelected ? "Warning" : "Active"} />
+                        <StatusBadge status={invoiceCalculationStatus(isSelected, preview.rows.length > 0)} />
                       </td>
                       <td className="px-4 py-3">
                         <div className="flex flex-wrap gap-2">
                           <Link href={`/credit-preview?invoiceId=${invoice.id}`} className="inline-flex h-9 items-center rounded-md border border-border bg-white px-3 text-xs font-semibold">
-                            Preview
+                            Calculate
                           </Link>
                           {canCreateInvoices ? (
                             <>
@@ -235,8 +256,8 @@ export default async function CreditPreviewPage({
           </div>
         ) : (
           <div className="p-6 text-center">
-            <h2 className="text-lg font-semibold">No Mock Invoices Yet</h2>
-            <p className="mt-2 text-sm text-muted-foreground">Create a mock invoice to enter amount and tons/quantity for crediting.</p>
+            <h2 className="text-lg font-semibold">No Invoice Transactions Yet</h2>
+            <p className="mt-2 text-sm text-muted-foreground">Create an invoice transaction to calculate credited amount and quantity.</p>
           </div>
         )}
       </Card>
@@ -244,7 +265,7 @@ export default async function CreditPreviewPage({
       {preview.invoice ? (
         <Card className="p-4">
           <div className="mb-4 rounded-md bg-muted p-3 text-sm leading-6 text-muted-foreground">
-            <span className="font-semibold text-foreground">Source of amount and tons:</span> these values come from the selected mock invoice. Credit Preview multiplies invoice quantity and invoice amount by each approved assignment allocation percentage.
+            <span className="font-semibold text-foreground">Calculation source:</span> the selected invoice transaction supplies amount and quantity. Approved assignment rules supply seller, role, and allocation percentage.
           </div>
           <div className="grid gap-3 text-sm md:grid-cols-5">
             <div>
@@ -273,7 +294,10 @@ export default async function CreditPreviewPage({
 
       <Card className="overflow-hidden">
         <div className="border-b border-border px-4 py-3">
-          <h2 className="text-base font-semibold">Credited Output</h2>
+          <h2 className="text-base font-semibold">Calculated Seller Credit</h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            These rows are generated from approved or active credit-eligible assignments that match the invoice customer, product group, and invoice date.
+          </p>
         </div>
         {preview.rows.length > 0 ? (
           <div className="overflow-x-auto">
@@ -286,7 +310,7 @@ export default async function CreditPreviewPage({
                   <th className="px-4 py-3 font-medium"><SortLink label="Allocation" sortKey="creditAllocation" currentSort={params.sort} currentDir={direction} query={params} /></th>
                   <th className="px-4 py-3 font-medium"><SortLink label="Credited Quantity" sortKey="creditQuantity" currentSort={params.sort} currentDir={direction} query={params} /></th>
                   <th className="px-4 py-3 font-medium"><SortLink label="Credited Amount" sortKey="creditAmount" currentSort={params.sort} currentDir={direction} query={params} /></th>
-                  <th className="px-4 py-3 font-medium">Status</th>
+                  <th className="px-4 py-3 font-medium">Calculation State</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border bg-white">
@@ -299,7 +323,7 @@ export default async function CreditPreviewPage({
                     <td className="px-4 py-3">{formatNumber(row.creditedQuantity, preview.invoice?.quantityUnit)}</td>
                     <td className="px-4 py-3">{formatCurrency(row.creditedAmount)}</td>
                     <td className="px-4 py-3">
-                      <StatusBadge status="Approved" />
+                      <StatusBadge status="Calculated" />
                     </td>
                   </tr>
                 ))}
@@ -308,8 +332,8 @@ export default async function CreditPreviewPage({
           </div>
         ) : (
           <div className="p-6 text-center">
-            <h2 className="text-lg font-semibold">No Matching Approved Assignments</h2>
-            <p className="mt-2 text-sm text-muted-foreground">No approved or active credit-eligible assignments match this invoice customer, product group, and invoice date. Create or approve a matching assignment, or edit the invoice customer/product/date.</p>
+            <h2 className="text-lg font-semibold">No Matching Assignment Rules</h2>
+            <p className="mt-2 text-sm text-muted-foreground">No approved or active credit-eligible assignment rules match this invoice customer, product group, and invoice date. Create or approve a matching assignment, or edit the transaction customer/product/date.</p>
           </div>
         )}
       </Card>

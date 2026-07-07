@@ -189,3 +189,19 @@ textarea,
 button {
   font: inherit;
 }
+
+@media print {
+  body {
+    background: white;
+    color: #0f172a;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .print-surface {
+    border: 0 !important;
+    box-shadow: none !important;
+  }
+}

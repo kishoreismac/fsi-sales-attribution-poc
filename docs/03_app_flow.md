@@ -13,17 +13,20 @@
 | `/assignments/:id` | Assignment Detail | View assignment details, validation results, status, history, and actions. |
 | `/validator` | Split Validator | Review grouped allocation checks and issues. |
 | `/approvals` | Approval Queue | Approve or reject submitted assignments. |
-| `/credit-preview` | Credit Preview | Preview credited tons or dollars using mock invoice data. |
+| `/credit-preview` | Invoice Credit Calculation | Calculate credited tons, units, or dollars using POC invoice transaction data. |
+| `/payments` | Monthly Interim Payments | Generate monthly interim payment values from credited invoice amounts. |
 | `/history` | Assignment History / Audit | Review changes, decisions, and audit events. |
-| `/exports` | Export Center | Export approved assignments and preview datasets. |
+| `/exports` | Export Center | Export approved assignments and open printable account assignment statements. |
+| `/exports/account-assignments` | Account Assignment Statement | Print active account/seller allocation statements in a client-familiar format. |
 
 ## Navigation
 
-- Left sidebar on desktop.
+- Left sidebar on desktop with hover-to-expand when collapsed and an optional pin toggle to keep it open.
 - Compact top or bottom navigation on mobile.
-- Dashboard, Assignments, Approvals, Credit Preview, and History should be first-class navigation items.
+- Dashboard, Assignments, Approvals, Split Validator, Credit Calculation, Payments, Exports, and History should be first-class navigation items when permitted.
 - Back buttons should appear on create/detail pages.
 - Status badges should be consistent across screens.
+- Tabular screens should support sort links on core columns.
 
 ## Auth Flow
 
@@ -72,14 +75,30 @@ Future:
 7. Date overlaps and inactive sellers are flagged.
 8. User sees severity, message, and recommended correction.
 
-## Core Journey: Credit Preview
+## Core Journey: Invoice Credit Calculation
 
-1. User opens Credit Preview.
-2. User selects a mock invoice or enters sample customer, product group, quantity, amount, and invoice date.
-3. System finds approved active assignments for that customer plus product group and invoice date.
+1. User opens Invoice Credit Calculation.
+2. User selects or creates a POC invoice transaction with customer, product group, quantity, unit, amount, and invoice date.
+3. System finds approved active credit-eligible assignments for that customer plus product group and invoice date.
 4. System applies allocation percentages.
 5. User sees credited quantity or credited amount by seller.
-6. User can export or reset the preview.
+6. User can edit invoice transaction inputs and recalculate.
+
+## Core Journey: Monthly Interim Payments
+
+1. User opens Payments.
+2. User selects payment month and interim rate.
+3. System uses eligible invoice transactions and active approved credit assignments.
+4. System groups credited amount by seller.
+5. User reviews gross credited amount, interim payment, and true-up reserve.
+
+## Core Journey: Account Assignment Statement
+
+1. Admin opens Exports.
+2. Admin opens Account Assignment Statement.
+3. System filters to active, credit-eligible assignments effective today.
+4. Statement groups rows by account and product group.
+5. Admin prints or saves the statement as PDF from the browser.
 
 ## Admin Journey
 
@@ -107,7 +126,9 @@ Future:
 | Roles | No roles configured. Add Direct, Overlay, LPS, and Manager Roll-up roles. |
 | Assignments | No assignments yet. Create the first assignment to start credit ownership setup. |
 | Approvals | No assignments need review. |
-| Credit Preview | No invoice selected. Choose a mock invoice to preview credit. |
+| Invoice Credit Calculation | No invoice selected. Choose or create an invoice transaction to calculate credit. |
+| Payments | No eligible invoice credit exists for the selected month. |
+| Account Assignment Statement | No active credit assignments are available for this statement. |
 | History | No audit events yet. Changes will appear here. |
 
 ## Error States
@@ -133,4 +154,3 @@ Future:
 | Approve assignment | Approval queue or assignment detail |
 | Reject assignment | Approval queue or assignment detail |
 | Export approved assignments | Stay on exports screen and show success state |
-

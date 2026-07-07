@@ -31,7 +31,7 @@ Primary users are Sales Compensation Admins and Sales Managers. They need confid
 
 - Neutral background.
 - Clear status colors for Draft, Submitted, Approved, Rejected, Active, Expired.
-- Tables with strong hierarchy, compact rows, and clear actions.
+- Tables with strong hierarchy, compact rows, clear actions, and sortable headers where comparison is useful.
 - 8px or smaller border radius for cards and controls unless the component system requires otherwise.
 - Accessible color contrast.
 - Visible focus states.
@@ -58,6 +58,10 @@ Primary users are Sales Compensation Admins and Sales Managers. They need confid
 - Loading skeleton
 - Toast notification
 - Export button
+- Print button
+- Sidebar pin toggle
+- Theme toggle
+- Sort link
 
 ## Screen-Level UX Notes
 
@@ -72,7 +76,7 @@ Include:
 - Validation failures count.
 - Expiring soon count.
 - Recent audit activity.
-- Quick links to create assignment, approval queue, and credit preview.
+- Quick links to create assignment, approval queue, validator, credit calculation, payments, and exports.
 
 ### Seller Management
 
@@ -126,16 +130,38 @@ Include:
 - Approve and reject actions.
 - Required rejection comment.
 
-### Credit Preview
+### Invoice Credit Calculation
 
-Answer: How would a sample invoice be credited?
+Answer: How is this invoice transaction credited?
 
 Include:
 
-- Mock invoice selector.
-- Invoice customer, product group, quantity, amount, date.
+- Invoice transaction selector.
+- Invoice customer, product group, quantity, unit, amount, date.
 - Result table with seller, role, allocation, credited quantity, credited amount.
 - Empty state when no matching approved assignment exists.
+
+### Monthly Interim Payments
+
+Answer: What interim payment values are generated for the selected month?
+
+Include:
+
+- Payment month and interim rate controls.
+- Eligible seller, invoice, gross credited, interim payment, and true-up reserve metrics.
+- Seller-level payment run table.
+- Copy that separates interim payment review from final payroll execution.
+
+### Export Center And Assignment Statement
+
+Answer: What approved outputs can be exported or printed?
+
+Include:
+
+- Approved assignment CSV.
+- Account Assignment Statement link.
+- Printable statement surface that uses the application color tokens, not one-off client screenshot colors.
+- Active-only assignment filtering for the statement.
 
 ### Assignment History / Audit
 
@@ -176,7 +202,10 @@ Use product terms consistently:
 | Role | Type, category when role configuration is meant |
 | Product Group | Product bucket |
 | Sales Parent | Parent account unless source data uses that term |
-| Credit Preview | Payout calculation |
+| Invoice Credit Calculation | Credit preview, payout simulation |
+| Invoice Transaction | Mock invoice |
+| Monthly Interim Payments | Payment execution, payroll posting |
+| Account Assignment Statement | Invoice |
 
 Example messages:
 
@@ -185,5 +214,6 @@ Example messages:
 - `This assignment overlaps an existing approved assignment.`
 - `Seller is inactive for the selected date range.`
 - `Assignment submitted for review.`
-- `Assignment approved and ready for credit preview.`
-
+- `Assignment approved and ready for credit calculation.`
+- `Invoice amount and quantity are entered on invoice transactions, not assignments.`
+- `Interim payment values are generated for review; this POC does not execute payroll or bank payments.`

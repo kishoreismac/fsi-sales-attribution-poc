@@ -2,7 +2,7 @@
 
 ## Technical Goal
 
-Build a local-first POC application that demonstrates the sales attribution workflow with mock/manual/CSV-style data and a future-ready data model. No live enterprise integrations are allowed in the POC.
+Build a POC application that demonstrates the sales attribution workflow with mock/manual/CSV-style data and a future-ready data model. The app runs locally and is deployed to Azure App Service for demos. No live enterprise integrations are allowed in the POC.
 
 ## Frontend Framework And UI Stack
 
@@ -19,7 +19,7 @@ Reasoning: This stack supports fast POC development, typed models, app routing, 
 ## Backend Runtime And API Approach
 
 - Next.js server runtime for POC APIs and server-side validation.
-- API endpoints or server actions grouped by domain: sellers, roles, customers, product groups, assignments, approvals, audit, mock invoices, credit preview, exports.
+- API endpoints or server actions grouped by domain: sellers, roles, customers, product groups, assignments, approvals, audit, invoice transactions, credit calculation, payments, and exports.
 - Business validation must live on the server, not only the client.
 
 ## Database Type And Provider
@@ -50,6 +50,7 @@ Future:
 POC:
 
 - Local development server.
+- Azure App Service for hosted demo deployment.
 
 Future:
 
@@ -125,9 +126,11 @@ Do not store secret values in code or documentation.
 | `/api/assignments/:id/approve` | POST | Approve assignment | Manager |
 | `/api/assignments/:id/reject` | POST | Reject assignment | Manager |
 | `/api/assignments/validate` | POST | Validate assignment group | Admin, Manager |
-| `/api/credit-preview` | POST | Preview credit using mock invoices | Admin, Manager |
+| `/api/credit-preview` | POST | Calculate invoice credit using POC invoice transactions and active approved assignments | Admin, Manager, Finance |
+| `/payments` | GET | Review generated monthly interim payment values | Admin, Manager, Finance |
 | `/api/audit-log` | GET | View audit events | Admin |
 | `/api/exports/approved-assignments` | GET | Export approved assignments | Admin |
+| `/exports/account-assignments` | GET | View printable active account assignment statement | Admin |
 
 ## Architecture Notes
 
@@ -136,4 +139,6 @@ Do not store secret values in code or documentation.
 - Keep seed data realistic enough to support the client demo storyline.
 - Export data should be derived from approved assignments and stable external IDs.
 - Do not overwrite assignment history; close old records and create new ones.
-
+- Assignment records store ownership percentages only. Invoice transaction records store quantity, unit, amount, and invoice date.
+- Lifecycle labels are date-aware: an approved assignment whose start date is today or earlier and whose end date is open/future is active for crediting.
+- Azure App Service deployment uses the Next.js standalone output plus bundled Prisma SQLite demo database for the POC.

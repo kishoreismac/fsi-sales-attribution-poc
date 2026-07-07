@@ -52,16 +52,16 @@ async function main() {
   if (sellers < 6) failures.push(`Expected at least 6 sellers, found ${sellers}.`);
   if (!editableSeller) failures.push("Expected at least 1 active seller available for edit flow.");
   if (roles < 4) failures.push(`Expected at least 4 roles, found ${roles}.`);
-  if (creditEligibleRoles < 1) failures.push("Expected at least 1 credit-eligible role for Credit Preview.");
+  if (creditEligibleRoles < 1) failures.push("Expected at least 1 credit-eligible role for Credit Calculation.");
   if (visibilityOnlyRoles < 1) failures.push("Expected at least 1 visibility-only role to test credit exclusion.");
   if (customers < 4) failures.push(`Expected at least 4 customers, found ${customers}.`);
   if (productGroups < 4) failures.push(`Expected at least 4 product groups, found ${productGroups}.`);
   if (submitted < 1) failures.push(`Expected at least 1 submitted assignment, found ${submitted}.`);
-  if (approvedOrActive < 1) failures.push(`Expected approved/active assignments for preview/export, found ${approvedOrActive}.`);
+  if (approvedOrActive < 1) failures.push(`Expected approved/active assignments for credit calculation/export, found ${approvedOrActive}.`);
   if (validationErrors < 1) failures.push("Expected at least 1 validation error for validator demo.");
-  if (mockInvoices < 1) failures.push(`Expected at least 1 mock invoice, found ${mockInvoices}.`);
-  if (!invoiceWithTons) failures.push("Expected at least 1 mock invoice with tons, quantity, and amount.");
-  if (previewCoverage < 1) failures.push("Expected at least 1 mock invoice to have approved/active credit-eligible assignment coverage.");
+  if (mockInvoices < 1) failures.push(`Expected at least 1 invoice transaction, found ${mockInvoices}.`);
+  if (!invoiceWithTons) failures.push("Expected at least 1 invoice transaction with tons, quantity, and amount.");
+  if (previewCoverage < 1) failures.push("Expected at least 1 invoice transaction to have approved/active credit-eligible assignment coverage.");
   if (paymentRun.sellerCount < 1 || paymentRun.interimPaymentAmount <= 0) failures.push("Expected payment processing to generate positive monthly interim payment values.");
 
   if (failures.length > 0) {

@@ -48,7 +48,7 @@ export default async function EditProductGroupPage({
         }
       />
 
-      <FormPanel title="Product Group" description="Metric type controls whether Credit Preview calculates credited tons/quantity, credited amount, or both.">
+      <FormPanel title="Product Group" description="Metric type controls whether Credit Calculation produces credited tons/quantity, credited amount, or both.">
         <form action={updateProductGroup} className="grid gap-4">
           <input type="hidden" name="id" value={productGroup.id} />
           <Field label="Product Group Code">
