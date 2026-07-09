@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Sales Attribution Workbench | Purina</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts: Inter -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "secondary-fixed": "#e4e2e1",
+                      "surface-tint": "#c00015",
+                      "on-primary-container": "#ffffff",
+                      "tertiary": "#006396",
+                      "on-secondary-container": "#656464",
+                      "on-secondary-fixed-variant": "#474746",
+                      "secondary": "#5f5e5e",
+                      "incentive-gold": "#FFD700",
+                      "outline-variant": "#e8bcb8",
+                      "on-error": "#ffffff",
+                      "on-tertiary-container": "#ffffff",
+                      "surface-container-lowest": "#ffffff",
+                      "on-tertiary-fixed-variant": "#004b72",
+                      "surface-dim": "#dadada",
+                      "secondary-fixed-dim": "#c8c6c5",
+                      "success-green": "#28A745",
+                      "background": "#f9f9f9",
+                      "tertiary-fixed-dim": "#91cdff",
+                      "on-surface": "#1a1c1c",
+                      "inverse-on-surface": "#f1f1f1",
+                      "pure-white": "#FFFFFF",
+                      "on-primary-fixed-variant": "#93000d",
+                      "on-tertiary": "#ffffff",
+                      "primary-fixed": "#ffdad6",
+                      "on-secondary": "#ffffff",
+                      "on-secondary-fixed": "#1b1c1c",
+                      "on-primary-fixed": "#410002",
+                      "surface-container-low": "#f3f3f3",
+                      "surface": "#f9f9f9",
+                      "surface-bright": "#f9f9f9",
+                      "on-tertiary-fixed": "#001e31",
+                      "primary-container": "#e91c24",
+                      "surface-container": "#eeeeee",
+                      "on-background": "#1a1c1c",
+                      "surface-variant": "#e2e2e2",
+                      "error-container": "#ffdad6",
+                      "on-error-container": "#93000a",
+                      "on-primary": "#ffffff",
+                      "surface-container-highest": "#e2e2e2",
+                      "secondary-container": "#e4e2e1",
+                      "outline": "#926e6a",
+                      "tertiary-container": "#007dbb",
+                      "tertiary-fixed": "#cce5ff",
+                      "surface-container-high": "#e8e8e8",
+                      "primary": "#bf0014",
+                      "inverse-primary": "#ffb4ac",
+                      "inverse-surface": "#2f3131",
+                      "error": "#ba1a1a",
+                      "on-surface-variant": "#5e3f3c",
+                      "primary-fixed-dim": "#ffb4ac"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "max-width": "1440px",
+                      "gutter": "24px",
+                      "margin-desktop": "64px",
+                      "margin-mobile": "16px",
+                      "unit": "8px"
+              },
+              "fontFamily": {
+                      "headline-lg-mobile": ["Inter"],
+                      "body-md": ["Inter"],
+                      "display-lg": ["Inter"],
+                      "headline-lg": ["Inter"],
+                      "label-bold": ["Inter"],
+                      "body-lg": ["Inter"],
+                      "label-sm": ["Inter"],
+                      "headline-md": ["Inter"]
+              },
+              "fontSize": {
+                      "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                      "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                      "label-bold": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                      "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                      "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}]
+              }
+            },
+          },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f9f9f9;
+        }
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+        @media (min-width: 768px) {
+            .bento-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(224, 224, 224, 0.5);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #e0e0e0;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="text-on-surface bg-background min-h-screen">
+<!-- Top Navigation Anchor -->
+<header class="sticky top-0 z-50 bg-pure-white border-b border-outline-variant h-20 flex items-center justify-between px-margin-mobile md:px-margin-desktop w-full max-w-max-width mx-auto">
+<div class="flex items-center gap-4">
+<img alt="Purina Logo" class="h-10 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDPReHCYUWU1noBfmWMrjIQPYYsQqedpje4Ch4osYIIacKDcuFdG80KRFe-JJfHfy53RV66ll94GlkPjHnBf1mnFz_aiP_hX-jU-EI1AwHMYxfJP3vvKb5P0PWqQPmdhDWGhAuTDDF8ntkH9s3AQ5WTeQ-kBR8tNYvjvAnD3Yf3moqau8OM8pG43ZRj-3M2VL-hYPF626eYOp7Po_x1tymerOnrdxny5cstx_KuY8apAPbbTBWER1lgyQ"/>
+<h1 class="hidden md:block text-headline-md font-black text-primary leading-tight">Sales Attribution Workbench</h1>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden md:flex gap-6 items-center mr-8">
+<a class="text-label-bold text-primary border-b-2 border-primary py-2 px-1" href="#">Dashboard</a>
+<a class="text-label-bold text-secondary hover:text-primary transition-colors" href="#">Sellers</a>
+<a class="text-label-bold text-secondary hover:text-primary transition-colors" href="#">Roles</a>
+<a class="text-label-bold text-secondary hover:text-primary transition-colors" href="#">Assignments</a>
+</div>
+<div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container font-bold overflow-hidden">
+<span class="material-symbols-outlined">person</span>
+</div>
+</div>
+</header>
+<main class="max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop py-8 pb-32">
+<!-- Dashboard Header & CTA -->
+<section class="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div>
+<span class="text-label-bold text-primary tracking-widest mb-2 block">POC DASHBOARD</span>
+<h2 class="text-headline-lg-mobile md:text-headline-lg text-on-surface mb-2">Sales Attribution Workbench</h2>
+<p class="text-body-md text-secondary max-w-2xl">
+                    Current demo role: <span class="font-bold text-on-surface">Sales Compensation Admin</span>. Live assignment status, validation health, and audit activity for the client demo.
+                </p>
+</div>
+<button class="bg-primary-container text-on-primary-container px-6 py-4 rounded-xl flex items-center justify-center gap-2 font-bold shadow-lg shadow-primary/20 hover:scale-105 transition-transform active:scale-95 group">
+<span>New Assignment</span>
+<span class="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</section>
+<!-- KPI Bento Grid -->
+<section class="bento-grid mb-12">
+<div class="bg-pure-white p-6 rounded-xl border border-outline-variant shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-5xl" style="font-variation-settings: 'FILL' 1;">assignment</span>
+</div>
+<h3 class="text-label-bold text-secondary mb-4">Active Assignments</h3>
+<div class="flex items-baseline gap-2">
+<span class="text-display-lg text-on-surface">5</span>
+<span class="text-success-green font-bold text-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">trending_up</span> +12%
+                    </span>
+</div>
+</div>
+<div class="bg-pure-white p-6 rounded-xl border border-outline-variant shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-5xl" style="font-variation-settings: 'FILL' 1;">how_to_reg</span>
+</div>
+<h3 class="text-label-bold text-secondary mb-4">Pending Approval</h3>
+<div class="flex items-baseline gap-2">
+<span class="text-display-lg text-on-surface">2</span>
+<span class="text-tertiary font-bold text-sm">Action Needed</span>
+</div>
+</div>
+<div class="bg-pure-white p-6 rounded-xl border border-outline-variant shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-5xl text-error" style="font-variation-settings: 'FILL' 1;">report_problem</span>
+</div>
+<h3 class="text-label-bold text-secondary mb-4">Validation Failures</h3>
+<div class="flex items-baseline gap-2">
+<span class="text-display-lg text-error">2</span>
+<span class="bg-error-container text-on-error-container text-xs px-2 py-0.5 rounded-full font-bold">CRITICAL</span>
+</div>
+</div>
+<div class="bg-pure-white p-6 rounded-xl border border-outline-variant shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-5xl" style="font-variation-settings: 'FILL' 1;">history</span>
+</div>
+<h3 class="text-label-bold text-secondary mb-4">Audit Events</h3>
+<div class="flex items-baseline gap-2">
+<span class="text-display-lg text-on-surface">14</span>
+<span class="text-secondary font-bold text-sm">Last 24h</span>
+</div>
+</div>
+</section>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<!-- Assignment Queue (2/3 width) -->
+<div class="lg:col-span-2 space-y-8">
+<div class="bg-pure-white rounded-xl border border-outline-variant shadow-sm overflow-hidden">
+<div class="px-6 py-5 border-b border-outline-variant flex items-center justify-between">
+<h2 class="text-headline-md text-on-surface">Assignment Queue</h2>
+<a class="text-label-bold text-tertiary flex items-center gap-1 hover:underline" href="#">
+                            View All <span class="material-symbols-outlined text-sm">open_in_new</span>
+</a>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low">
+<th class="px-6 py-4 text-label-bold text-secondary uppercase tracking-wider">Assignment</th>
+<th class="px-6 py-4 text-label-bold text-secondary uppercase tracking-wider">Customer</th>
+<th class="px-6 py-4 text-label-bold text-secondary uppercase tracking-wider">Status</th>
+<th class="px-6 py-4 text-label-bold text-secondary uppercase tracking-wider text-right">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="px-6 py-4">
+<span class="text-primary font-bold">A-1004</span>
+<div class="text-xs text-secondary mt-1">Purina All Seasons Cattle</div>
+</td>
+<td class="px-6 py-4 text-body-md">Prairie View Cooperative</td>
+<td class="px-6 py-4">
+<span class="bg-error-container text-on-error-container px-3 py-1 rounded-full text-xs font-bold uppercase">Error</span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="p-2 hover:bg-surface-variant rounded-lg transition-colors">
+<span class="material-symbols-outlined text-secondary">edit</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="px-6 py-4">
+<span class="text-primary font-bold">A-1010</span>
+<div class="text-xs text-secondary mt-1">Purina AMPLI-CALF</div>
+</td>
+<td class="px-6 py-4 text-body-md">Prairie View Cooperative</td>
+<td class="px-6 py-4">
+<span class="bg-error-container text-on-error-container px-3 py-1 rounded-full text-xs font-bold uppercase">Error</span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="p-2 hover:bg-surface-variant rounded-lg transition-colors">
+<span class="material-symbols-outlined text-secondary">edit</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Demo Scope / Mission Control -->
+<div class="bg-on-surface text-pure-white p-8 rounded-xl relative overflow-hidden">
+<div class="absolute top-0 right-0 w-32 h-32 bg-primary/20 blur-3xl rounded-full translate-x-10 -translate-y-10"></div>
+<div class="relative z-10">
+<div class="flex items-center justify-between mb-6">
+<h2 class="text-headline-md font-bold">Demo Scope</h2>
+<span class="bg-surface/20 backdrop-blur-md border border-white/10 px-3 py-1 rounded text-xs font-bold tracking-widest uppercase">Mock Data</span>
+</div>
+<p class="text-body-lg mb-4 opacity-90 leading-relaxed">
+                            POC-first, future-ready foundation. This module handles role configuration, assignment validation, and performance-based credit calculations.
+                        </p>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
+<div class="flex gap-3 items-start">
+<span class="material-symbols-outlined text-success-green">check_circle</span>
+<div>
+<h4 class="font-bold mb-1">In Scope</h4>
+<p class="text-sm opacity-70">Validation, history, credit calculation, and exports.</p>
+</div>
+</div>
+<div class="flex gap-3 items-start">
+<span class="material-symbols-outlined text-incentive-gold">rocket_launch</span>
+<div>
+<h4 class="font-bold mb-1">Future Phases</h4>
+<p class="text-sm opacity-70">Workday, SAP, Salesforce, and Power BI integrations.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Recent Audit Sidebar (1/3 width) -->
+<div class="bg-pure-white rounded-xl border border-outline-variant shadow-sm flex flex-col">
+<div class="px-6 py-5 border-b border-outline-variant flex items-center justify-between sticky top-0 bg-pure-white z-10">
+<h2 class="text-headline-md text-on-surface">Recent Audit</h2>
+<a class="text-label-bold text-tertiary hover:underline" href="#">History</a>
+</div>
+<div class="flex-1 overflow-y-auto custom-scrollbar p-6 space-y-6">
+<!-- Audit Item -->
+<div class="flex gap-4 group">
+<div class="flex flex-col items-center">
+<div class="w-2 h-2 rounded-full bg-success-green ring-4 ring-success-green/20"></div>
+<div class="w-px h-full bg-outline-variant mt-2"></div>
+</div>
+<div class="pb-2">
+<div class="flex items-center justify-between gap-4 mb-1">
+<span class="text-label-bold text-on-surface uppercase">Approve</span>
+<span class="text-xs text-secondary font-medium">Jul 7, 2026</span>
+</div>
+<p class="text-body-md text-secondary leading-snug">Approved assignment from approval queue.</p>
+<p class="text-xs font-bold text-on-surface mt-2">Daniel Morris</p>
+</div>
+</div>
+<!-- Audit Item -->
+<div class="flex gap-4 group">
+<div class="flex flex-col items-center">
+<div class="w-2 h-2 rounded-full bg-success-green ring-4 ring-success-green/20"></div>
+<div class="w-px h-full bg-outline-variant mt-2"></div>
+</div>
+<div class="pb-2">
+<div class="flex items-center justify-between gap-4 mb-1">
+<span class="text-label-bold text-on-surface uppercase">Approve</span>
+<span class="text-xs text-secondary font-medium">Jul 7, 2026</span>
+</div>
+<p class="text-body-md text-secondary leading-snug">Approved assignment from approval queue.</p>
+<p class="text-xs font-bold text-on-surface mt-2">Daniel Morris</p>
+</div>
+</div>
+<!-- Audit Item -->
+<div class="flex gap-4 group">
+<div class="flex flex-col items-center">
+<div class="w-2 h-2 rounded-full bg-tertiary ring-4 ring-tertiary/20"></div>
+<div class="w-px h-full bg-outline-variant mt-2"></div>
+</div>
+<div class="pb-2">
+<div class="flex items-center justify-between gap-4 mb-1">
+<span class="text-label-bold text-on-surface uppercase">Submit</span>
+<span class="text-xs text-secondary font-medium">Jul 6, 2026</span>
+</div>
+<p class="text-body-md text-secondary leading-snug">Created and submitted assignment from workbench.</p>
+<p class="text-xs font-bold text-on-surface mt-2">Emily Carter</p>
+</div>
+</div>
+<!-- Audit Item -->
+<div class="flex gap-4 group">
+<div class="flex flex-col items-center">
+<div class="w-2 h-2 rounded-full bg-secondary ring-4 ring-secondary/20"></div>
+</div>
+<div class="pb-2">
+<div class="flex items-center justify-between gap-4 mb-1">
+<span class="text-label-bold text-on-surface uppercase">Validate</span>
+<span class="text-xs text-secondary font-medium">Jul 6, 2026</span>
+</div>
+<p class="text-body-md text-secondary leading-snug">Revalidated assignment from detail screen.</p>
+<p class="text-xs font-bold text-on-surface mt-2">Emily Carter</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Navigation Drawer (Bottom Bar for Mobile) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full bg-pure-white border-t border-outline-variant px-6 py-4 flex justify-between items-center z-50">
+<button class="flex flex-col items-center gap-1 text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span class="text-[10px] font-bold uppercase tracking-tight">Dashboard</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-secondary">
+<span class="material-symbols-outlined">group</span>
+<span class="text-[10px] font-bold uppercase tracking-tight">Sellers</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-secondary">
+<span class="material-symbols-outlined">badge</span>
+<span class="text-[10px] font-bold uppercase tracking-tight">Roles</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-secondary">
+<span class="material-symbols-outlined">assignment</span>
+<span class="text-[10px] font-bold uppercase tracking-tight">Tasks</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-secondary">
+<span class="material-symbols-outlined">history</span>
+<span class="text-[10px] font-bold uppercase tracking-tight">Audit</span>
+</button>
+</nav>
+<!-- Floating Action Tooltip / Incentive Reminder -->
+<div class="fixed bottom-24 right-8 z-40 hidden md:block group">
+<div class="absolute right-full mr-4 top-1/2 -translate-y-1/2 bg-on-surface text-pure-white px-4 py-2 rounded-lg text-sm font-bold opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none shadow-xl">
+            Quick Status Check
+        </div>
+<button class="w-14 h-14 bg-primary rounded-full flex items-center justify-center text-pure-white shadow-2xl hover:scale-110 transition-transform active:scale-90">
+<span class="material-symbols-outlined text-3xl">bolt</span>
+</button>
+</div>
+<script>
+        // Simple Micro-interaction for cards
+        document.querySelectorAll('.bento-grid > div').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-4px)';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(0px)';
+            });
+        });
+    </script>
+</body></html>

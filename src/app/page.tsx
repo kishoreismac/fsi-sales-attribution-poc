@@ -54,14 +54,14 @@ export default async function DashboardPage() {
         {metrics.map((metric) => {
           const Icon = metric.icon;
           return (
-            <Card key={metric.label} className="p-5">
-              <div className="flex items-center justify-between gap-3">
+            <Card key={metric.label} className="group relative overflow-hidden p-5 transition hover:-translate-y-0.5 hover:shadow-panel">
+              <div className="absolute right-4 top-4 text-muted opacity-80 transition group-hover:text-primary group-hover:opacity-20">
+                <Icon size={48} aria-hidden="true" />
+              </div>
+              <div className="relative flex items-end justify-between gap-3">
                 <div>
-                  <p className="text-sm text-muted-foreground">{metric.label}</p>
-                  <p className="mt-2 text-3xl font-semibold tracking-normal">{metric.value}</p>
-                </div>
-                <div className="flex h-11 w-11 items-center justify-center rounded-md border border-border bg-muted text-primary">
-                  <Icon size={20} aria-hidden="true" />
+                  <p className="text-xs font-bold uppercase tracking-wide text-muted-foreground">{metric.label}</p>
+                  <p className="mt-4 text-4xl font-extrabold tracking-normal text-foreground">{metric.value}</p>
                 </div>
               </div>
             </Card>
@@ -71,7 +71,7 @@ export default async function DashboardPage() {
 
       <section className="grid gap-4 xl:grid-cols-[1fr_380px]">
         <Card className="overflow-hidden">
-          <div className="flex items-center justify-between gap-3 border-b border-border bg-surface-soft px-4 py-3">
+          <div className="flex items-center justify-between gap-3 border-b border-border bg-surface-soft px-5 py-4">
             <h2 className="text-base font-semibold">Assignment Queue</h2>
             <Link href="/assignments" className="text-sm font-semibold text-primary">
               View All
@@ -89,7 +89,7 @@ export default async function DashboardPage() {
                     <th className="px-4 py-3 font-medium">Status</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-border bg-white">
+                <tbody className="divide-y divide-border bg-surface">
                   {dashboard.queue.map((item) => {
                     const hasErrors = validationStatusFor(item.status, item.validationResults) === "Error";
                     return (
@@ -120,15 +120,15 @@ export default async function DashboardPage() {
         </Card>
 
         <div className="grid gap-4">
-          <Card className="p-4">
+          <Card className="border-primary/20 bg-surface p-5">
             <div className="flex items-start justify-between gap-3">
               <div>
-                <h2 className="text-base font-semibold">Demo Scope</h2>
-                <p className="mt-1 text-sm text-muted-foreground">POC-first, future-ready foundation.</p>
+                <p className="text-xs font-bold uppercase tracking-wide text-primary">Demo Scope</p>
+                <h2 className="mt-1 text-base font-semibold text-foreground">POC-first, future-ready foundation.</h2>
               </div>
-              <Badge>Mock Data</Badge>
+              <Badge className="whitespace-nowrap border-primary/20 bg-primary/10 text-primary">Mock Data</Badge>
             </div>
-            <div className="mt-4 space-y-3 text-sm leading-6">
+            <div className="mt-4 space-y-3 border-l-2 border-primary/30 pl-4 text-sm leading-6 text-foreground">
               <p>Role configuration, assignment validation, approval history, credit calculation, payments, and exports are in scope.</p>
               <p className="text-muted-foreground">
                 Live Workday, SAP/JDE/SAC, Salesforce, Power BI, and payroll integrations remain future phases.
@@ -137,7 +137,7 @@ export default async function DashboardPage() {
           </Card>
 
           <Card className="overflow-hidden">
-            <div className="flex items-center justify-between gap-3 border-b border-border bg-surface-soft px-4 py-3">
+            <div className="flex items-center justify-between gap-3 border-b border-border bg-surface-soft px-5 py-4">
               <h2 className="text-base font-semibold">Recent Audit</h2>
               <Link href="/history" className="text-sm font-semibold text-primary">
                 History

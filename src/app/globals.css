@@ -3,35 +3,35 @@
 @tailwind utilities;
 
 :root {
-  --background: 216 38% 97%;
-  --foreground: 221 37% 15%;
-  --border: 215 36% 89%;
-  --muted: 218 40% 95%;
-  --muted-foreground: 213 17% 39%;
-  --primary: 224 100% 56%;
+  --background: 0 0% 98%;
+  --foreground: 180 4% 11%;
+  --border: 0 0% 88%;
+  --muted: 0 0% 93%;
+  --muted-foreground: 0 0% 37%;
+  --primary: 356 100% 45%;
   --primary-foreground: 0 0% 100%;
   --success: 154 72% 31%;
   --warning: 36 71% 42%;
   --danger: 3 54% 49%;
   --surface: 0 0% 100%;
-  --surface-soft: 220 33% 99%;
-  --ring: 224 100% 56%;
+  --surface-soft: 0 0% 95%;
+  --ring: 356 100% 45%;
 }
 
 :root[data-theme="dark"] {
-  --background: 222 29% 9%;
-  --foreground: 210 24% 96%;
-  --border: 218 20% 24%;
-  --muted: 221 24% 17%;
-  --muted-foreground: 215 16% 70%;
-  --primary: 220 100% 70%;
-  --primary-foreground: 222 32% 10%;
+  --background: 220 7% 9%;
+  --foreground: 0 0% 95%;
+  --border: 0 0% 24%;
+  --muted: 0 0% 16%;
+  --muted-foreground: 0 0% 72%;
+  --primary: 4 100% 72%;
+  --primary-foreground: 0 0% 10%;
   --success: 151 58% 48%;
   --warning: 37 92% 56%;
   --danger: 354 76% 58%;
-  --surface: 222 24% 13%;
-  --surface-soft: 222 23% 16%;
-  --ring: 220 100% 70%;
+  --surface: 220 6% 13%;
+  --surface-soft: 220 5% 17%;
+  --ring: 4 100% 72%;
 }
 
 * {
@@ -51,6 +51,12 @@ body {
   font-size: 14px;
   line-height: 1.5;
   text-rendering: optimizeLegibility;
+}
+
+main {
+  max-width: 1440px;
+  margin-inline: auto;
+  width: 100%;
 }
 
 :root[data-theme="dark"] .bg-white {
@@ -173,6 +179,8 @@ thead th {
   white-space: nowrap;
   border-bottom: 1px solid hsl(var(--border));
   letter-spacing: 0;
+  text-transform: uppercase;
+  font-size: 12px;
 }
 
 tbody tr {

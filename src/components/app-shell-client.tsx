@@ -1,8 +1,9 @@
 "use client";
 
-import { Pin, PinOff, ShieldCheck } from "lucide-react";
+import { Pin, PinOff, UserRound } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { DemoRoleSwitcher } from "@/components/demo-role-switcher";
+import { PurinaLogoMark } from "@/components/purina-logo-mark";
 import { SidebarNav } from "@/components/sidebar-nav";
 import { ThemeToggle } from "@/components/theme-toggle";
 import type { DemoRole } from "@/lib/auth/permissions";
@@ -73,7 +74,7 @@ export function AppShellClient({
   const PinIcon = pinned ? PinOff : Pin;
 
   return (
-    <div className={cn("min-h-screen lg:grid", collapsed ? "lg:grid-cols-[88px_1fr]" : "lg:grid-cols-[284px_1fr]")}>
+    <div className={cn("min-h-screen bg-background lg:grid", collapsed ? "lg:grid-cols-[88px_1fr]" : "lg:grid-cols-[292px_1fr]")}>
       <aside
         className="border-b border-border bg-surface transition-[width] duration-200 lg:min-h-screen lg:border-b-0 lg:border-r"
         onMouseEnter={expandSidebar}
@@ -81,17 +82,19 @@ export function AppShellClient({
         onFocus={expandSidebar}
         onBlur={scheduleCollapse}
       >
-        <div className={cn("flex h-16 items-center justify-between gap-3 border-b border-border px-5", collapsed && "lg:justify-center lg:px-3")}>
-          <div className={cn(collapsed && "lg:sr-only")}>
-            <p className="text-sm font-semibold text-foreground">FSI POC</p>
-            <p className="text-xs text-muted-foreground">Sales attribution foundation</p>
+        <div className={cn("flex h-20 items-center justify-between gap-3 border-b border-border px-5", collapsed && "lg:justify-center lg:px-3")}>
+          <div className="flex min-w-0 items-center gap-3">
+            <PurinaLogoMark className="h-11 w-11 shrink-0" />
+            <div className={cn("min-w-0", collapsed && "lg:sr-only")}>
+              <p className="truncate text-sm font-extrabold uppercase tracking-wide text-foreground">Sales Excellence</p>
+              <p className="truncate text-xs font-medium text-muted-foreground">Attribution foundation</p>
+            </div>
           </div>
-          {collapsed ? <p className="hidden text-sm font-semibold text-primary lg:block">FSI</p> : null}
           <button
             type="button"
             onClick={togglePinned}
             className={cn(
-              "hidden h-9 w-9 items-center justify-center rounded-md border border-border bg-white text-muted-foreground shadow-sm transition hover:bg-muted hover:text-foreground lg:inline-flex",
+              "hidden h-9 w-9 items-center justify-center rounded-md border border-border bg-surface text-muted-foreground shadow-sm transition hover:border-primary hover:bg-muted hover:text-primary lg:inline-flex",
               collapsed && "lg:hidden"
             )}
             aria-label={pinned ? "Unpin sidebar" : "Pin sidebar open"}
@@ -106,14 +109,14 @@ export function AppShellClient({
         </div>
       </aside>
       <div className="min-w-0">
-        <header className="sticky top-0 z-10 flex min-h-16 items-center justify-between gap-3 border-b border-border bg-background/95 px-4 py-3 backdrop-blur sm:px-6 lg:px-8">
+        <header className="sticky top-0 z-10 flex min-h-16 items-center justify-between gap-3 border-b border-border bg-surface/92 px-4 py-3 backdrop-blur sm:px-6 lg:px-8">
           <div className="flex items-center gap-3">
-            <div className="hidden h-10 w-10 items-center justify-center rounded-md border border-border bg-surface text-primary shadow-sm sm:flex">
-              <ShieldCheck size={18} aria-hidden="true" />
+            <div className="hidden h-10 w-10 items-center justify-center rounded-md border border-border bg-surface-soft text-primary shadow-sm sm:flex">
+              <UserRound size={18} aria-hidden="true" />
             </div>
             <div>
-            <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Current Role</p>
-            <p className="text-sm font-semibold">{label}</p>
+              <p className="text-xs font-bold uppercase tracking-wide text-primary">Current Role</p>
+              <p className="text-sm font-semibold">{label}</p>
             </div>
           </div>
           <ThemeToggle />
