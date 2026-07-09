@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { approveAssignment, rejectAssignment } from "@/app/actions/assignments";
+import { ApprovalSuccessOverlay } from "@/components/approval-success-overlay";
 import { AuthorizationNotice } from "@/components/authorization-notice";
 import { Card } from "@/components/ui/card";
 import { PageHeader } from "@/components/ui/page-header";
@@ -9,8 +10,12 @@ import { listSubmittedAssignments } from "@/lib/data/assignments";
 import { formatDate } from "@/lib/setup-options";
 import { validationStatusFor } from "@/lib/validation/status";
 
-export default async function ApprovalsPage() {
-  const [allowed, session] = await Promise.all([can("assignments:approve"), getDemoSession()]);
+export default async function ApprovalsPage({
+  searchParams
+}: {
+  searchParams: Promise<{ approved?: string }>;
+}) {
+  const [allowed, session, params] = await Promise.all([can("assignments:approve"), getDemoSession(), searchParams]);
 
   if (!allowed) {
     return (
@@ -25,6 +30,7 @@ export default async function ApprovalsPage() {
 
   return (
     <div className="space-y-6">
+      <ApprovalSuccessOverlay assignmentNumber={params.approved} />
       <PageHeader
         eyebrow="Review"
         title="Approval Queue"

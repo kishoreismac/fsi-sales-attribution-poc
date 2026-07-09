@@ -188,6 +188,7 @@ export async function approveAssignment(formData: FormData) {
     where: { id },
     select: {
       id: true,
+      assignmentNumber: true,
       status: true,
       startDate: true,
       endDate: true
@@ -224,6 +225,7 @@ export async function approveAssignment(formData: FormData) {
   revalidatePath("/approvals");
   revalidatePath("/assignments");
   revalidatePath(`/assignments/${assignment.id}`);
+  redirect(`/approvals?approved=${encodeURIComponent(current.assignmentNumber)}`);
 }
 
 export async function rejectAssignment(formData: FormData) {

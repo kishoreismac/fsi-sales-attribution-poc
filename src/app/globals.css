@@ -198,6 +198,84 @@ button {
   font: inherit;
 }
 
+.approval-success-backdrop {
+  animation: approval-backdrop-in 180ms ease-out both;
+}
+
+.approval-success-card {
+  animation: approval-card-in 360ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.approval-success-check {
+  animation: approval-check-pop 520ms cubic-bezier(0.16, 1, 0.3, 1) 120ms both;
+}
+
+.approval-confetti {
+  animation: approval-confetti-fall 1200ms cubic-bezier(0.18, 0.8, 0.28, 1) both;
+}
+
+@keyframes approval-backdrop-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes approval-card-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes approval-check-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.45);
+  }
+  62% {
+    opacity: 1;
+    transform: scale(1.12);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes approval-confetti-fall {
+  0% {
+    opacity: 0;
+    transform: translateY(-24px) rotate(0deg);
+  }
+  16% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(240px) rotate(220deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .approval-success-backdrop,
+  .approval-success-card,
+  .approval-success-check,
+  .approval-confetti {
+    animation: none;
+  }
+
+  .approval-confetti {
+    display: none;
+  }
+}
+
 @media print {
   body {
     background: white;
